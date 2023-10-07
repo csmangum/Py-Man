@@ -6,6 +6,12 @@ from constants import *
 from entity import Entity
 from sprites import PacmanSprites
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nodes import Node
+    from ghosts import Ghost
+
 
 class Pacman(Entity):
     """
@@ -45,7 +51,7 @@ class Pacman(Entity):
         Checks if the entity has collided with another entity
     """
 
-    def __init__(self, node) -> None:
+    def __init__(self, node: Node) -> None:
         Entity.__init__(self, node)
         self.name = PACMAN
         self.color = YELLOW
@@ -73,13 +79,18 @@ class Pacman(Entity):
         self.alive = False
         self.direction = STOP
 
-    def update(self, dt) -> None:
+    def update(self, dt: float) -> None:
         """
         Updates the Pac-Man's state based on the time delta (dt).
 
         It handles the movement, checks for overshooting targets, and handles
         portal transitions (like when Pac-Man goes off one side of the screen
         and appears on the other). It also checks for direction reversal.
+
+        Parameters
+        ----------
+        dt : float
+            The time delta
         """
         self.sprites.update(dt)
         self.position += self.directions[self.direction] * self.speed * dt
@@ -101,12 +112,17 @@ class Pacman(Entity):
             if self.oppositeDirection(direction):
                 self.reverseDirection()
 
-    def getValidKey(self) -> int:
+    def getValidKey(self) -> str:
         """
         Checks for keyboard inputs and returns the direction corresponding to
         the key pressed.
 
         If no movement key is pressed, it returns STOP.
+
+        Returns
+        -------
+        str
+            The direction corresponding to the key pressed
         """
         key_pressed = pygame.key.get_pressed()
         if key_pressed[K_UP]:
@@ -119,28 +135,46 @@ class Pacman(Entity):
             return RIGHT
         return STOP
 
-    def eatPellets(self, pelletList) -> Union[None, object]:
+    def eatPellets(self, pelletList: list) -> Union[None, object]:
         """
         Checks for collisions between Pac-Man and any pellet in the provided list.
 
         If a collision is detected, it returns the pellet that was "eaten".
 
-        Returns None if no collision is detected.
+        Parameters
+        ----------
+        pelletList : list
+            A list of pellets to check for collisions with
+
+        Returns
+        -------
+        object
+            The pellet that was "eaten" if a collision is detected, None otherwise
         """
         for pellet in pelletList:
             if self.collideCheck(pellet):
                 return pellet
         return None
 
-    def collideGhost(self, ghost) -> bool:
+    def collideGhost(self, ghost: "Ghost") -> bool:
         """
         Checks if Pac-Man has collided with a ghost.
 
         Returns True if a collision is detected, False otherwise.
+
+        Parameters
+        ----------
+        ghost : Ghost
+            The ghost to check for collisions with
+
+        Returns
+        -------
+        bool
+            True if a collision is detected, False otherwise
         """
         return self.collideCheck(ghost)
 
-    def collideCheck(self, other) -> bool:
+    def collideCheck(self, other: "object") -> bool:
         """
         A general collision detection method that checks if Pac-Man has collided
         with another entity (like a ghost or pellet).
@@ -149,6 +183,16 @@ class Pacman(Entity):
         it's less than or equal to the sum of their collision radii.
 
         Returns True if a collision is detected, False otherwise.
+
+        Parameters
+        ----------
+        other : object
+            The entity to check for collisions with
+
+        Returns
+        -------
+        bool
+            True if a collision is detected, False otherwise
         """
         d = self.position - other.position
         dSquared = d.magnitudeSquared()
