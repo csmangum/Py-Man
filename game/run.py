@@ -146,7 +146,8 @@ class GameController:
         """
         self.mazedata.loadMaze(self.level)
         self.mazesprites = MazeSprites(
-            self.mazedata.obj.name + ".txt", self.mazedata.obj.name + "_rotation.txt"
+            "game/" + self.mazedata.obj.name + ".txt",
+            "game/" + self.mazedata.obj.name + "_rotation.txt",
         )
         self.setBackground()
         self.nodes = NodeGroup(self.mazedata.obj.name + ".txt")

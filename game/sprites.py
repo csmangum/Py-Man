@@ -46,7 +46,7 @@ class Spritesheet(ABC):
 
         Rescales the sprite sheet to match the game's tile width and height.
         """
-        self.sheet = pygame.image.load("spritesheet_mspacman.png").convert()
+        self.sheet = pygame.image.load("game/spritesheet_mspacman.png").convert()
         transcolor = self.sheet.get_at((0, 0))
         self.sheet.set_colorkey(transcolor)
         width = int(self.sheet.get_width() / BASETILEWIDTH * TILEWIDTH)
@@ -604,6 +604,7 @@ class MazeSprites(Spritesheet):
         np.ndarray
             A NumPy array of strings representing the maze layout.
         """
+        print(f'Loading maze file "{mazefile}"')
         return np.loadtxt(mazefile, dtype="<U1")
 
     def constructBackground(self, background: pygame.Surface, y: int) -> pygame.Surface:
