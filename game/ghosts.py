@@ -6,8 +6,102 @@ from entity import Entity
 from modes import ModeController
 from sprites import GhostSprites
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from game.nodes import Node
+    from game.pacman import Pacman
+
+
 class Ghost(Entity):
-    def __init__(self, node, pacman=None, blinky=None):
+    """
+    Class is responsible for managing the behavior and attributes of ghost
+    characters in a game.
+
+    It handles their movement, goals, modes (such as scatter and chase),
+    and other properties related to gameplay.
+
+    Attributes
+    ----------
+    name : str
+        The name of the ghost.
+    points : int
+        The points value of the ghost.
+    goal : Vector2
+        The goal of the ghost.
+    directionMethod : method
+        The method used to determine the direction of the ghost.
+    pacman : Pacman
+        The player character.
+    mode : ModeController
+        The mode controller for the ghost.
+    blinky : Ghost
+        Another ghost.
+    homeNode : Node
+        The node that the ghost should return to when it is in scatter mode.
+    spawnNode : Node
+        The node that the ghost should spawn at.
+    sprites : GhostSprites
+        The sprites associated with the ghost.
+
+    Methods
+    -------
+    reset()
+        Resets the ghost to its initial state.
+    update(dt)
+        Updates the ghost.
+        Calls the update method of the sprites attribute.
+        Calls the update method of the mode attribute.
+        If the current mode is scatter, it calls the scatter method.
+        If the current mode is chase, it calls the chase method.
+        Calls the update method of the parent class (Entity).
+    scatter()
+        Sets the goal attribute to Vector2().
+    chase()
+        Sets the goal attribute to the position of the player character.
+    spawn()
+        Sets the goal attribute to the position of the spawn node.
+    setSpawnNode(node)
+        Sets the spawnNode attribute to the provided node.
+    startSpawn()
+        Sets the mode to spawn mode.
+        If the current mode is spawn, it sets the speed to 150, sets the
+        directionMethod to goalDirection, and calls the spawn method.
+    startFreight()
+        Sets the mode to freight mode.
+        If the current mode is freight, it sets the speed to 50 and sets the
+        directionMethod to randomDirection.
+    normalMode()
+        Sets the speed to 100 and sets the directionMethod to goalDirection.
+    """
+
+    def __init__(self, node, pacman=None, blinky=None) -> None:
+        """
+        Calls the __init__ method of the parent class (Entity) to initialize
+        its attributes.
+
+        Sets the name attribute to "GHOST."
+
+        Initializes the points attribute to 200.
+
+        Initializes the goal attribute as a Vector2 object.
+
+        Sets the directionMethod to the goalDirection method.
+
+        Takes two optional parameters, pacman and blinky, which seem to represent
+        other game entities (likely the player character and another ghost).
+
+        Initializes a ModeController object as mode.
+
+        Parameters
+        ----------
+        node : Node
+            The node that the ghost should be positioned at.
+        pacman : Pacman
+            The player character.
+        blinky : Ghost
+            Another ghost.
+        """
         Entity.__init__(self, node)
         self.name = GHOST
         self.points = 200
@@ -18,12 +112,36 @@ class Ghost(Entity):
         self.blinky = blinky
         self.homeNode = node
 
-    def reset(self):
+    def reset(self) -> None:
+        """
+        Calls the reset method of the parent class (Entity) to reset its attributes.
+
+        Resets specific attributes of the Ghost class, including points
+        and directionMethod.
+        """
         Entity.reset(self)
         self.points = 200
         self.directionMethod = self.goalDirection
 
-    def update(self, dt):
+    def update(self, dt: int) -> None:
+        """
+        Calls the update method of the parent class (Entity) to update the
+        ghost's position.
+
+        Calls the update method of the mode object to handle the ghost's behavior
+        based on its current mode (scatter, chase, etc.).
+
+        Depending on the current mode, it either calls the scatter method or
+        the chase method.
+
+        The Entity.update method is then called to update the ghost's position
+        based on its behavior.
+
+        Parameters
+        ----------
+        dt : int
+            The time increment.
+        """
         self.sprites.update(dt)
         self.mode.update(dt)
         if self.mode.current is SCATTER:
@@ -32,40 +150,77 @@ class Ghost(Entity):
             self.chase()
         Entity.update(self, dt)
 
-    def scatter(self):
+    def scatter(self) -> None:
+        """
+        Sets the goal attribute to Vector2()
+        """
         self.goal = Vector2()
 
-    def chase(self):
+    def chase(self) -> None:
+        """
+        Sets the goal attribute to the position of the pacman entity,
+        indicating that the ghost is chasing the player.
+        """
         self.goal = self.pacman.position
 
-    def spawn(self):
+    def spawn(self) -> None:
+        """
+        Sets the goal attribute to the position of a spawn node
+        """
         self.goal = self.spawnNode.position
 
-    def setSpawnNode(self, node):
+    def setSpawnNode(self, node: "Node") -> None:
+        """
+        Sets the spawnNode attribute to a specific node where the ghost
+        should spawn.
+
+        Parameters
+        ----------
+        node : Node
+            The node that the ghost should spawn at.
+        """
         self.spawnNode = node
 
-    def startSpawn(self):
+    def startSpawn(self) -> None:
+        """
+        Sets the ghost's mode to spawn mode using the mode.setSpawnMode() method.
+
+        If the current mode is spawn mode, it sets the ghost's speed,
+        direction method, and goal to appropriate values for spawning.
+        """
         self.mode.setSpawnMode()
         if self.mode.current == SPAWN:
             self.setSpeed(150)
             self.directionMethod = self.goalDirection
             self.spawn()
 
-    def startFreight(self):
+    def startFreight(self) -> None:
+        """
+        Sets the ghost's mode to freight mode using the mode.setFreightMode() method.
+
+        If the current mode is freight mode, it sets the ghost's speed and direction
+        method for freight mode behavior.
+        """
         self.mode.setFreightMode()
         if self.mode.current == FREIGHT:
             self.setSpeed(50)
-            self.directionMethod = self.randomDirection         
+            self.directionMethod = self.randomDirection
 
-    def normalMode(self):
+    def normalMode(self) -> None:
+        """
+        Resets the ghost to normal mode, setting its speed and direction method
+        accordingly.
+
+        It also denies access to a particular direction at the home node.
+        """
         self.setSpeed(100)
         self.directionMethod = self.goalDirection
         self.homeNode.denyAccess(DOWN, self)
 
 
-
-
 class Blinky(Ghost):
+    """Blinky is the red ghost."""
+
     def __init__(self, node, pacman=None, blinky=None):
         Ghost.__init__(self, node, pacman, blinky)
         self.name = BLINKY
@@ -74,6 +229,8 @@ class Blinky(Ghost):
 
 
 class Pinky(Ghost):
+    """Pinky is the pink ghost."""
+
     def __init__(self, node, pacman=None, blinky=None):
         Ghost.__init__(self, node, pacman, blinky)
         self.name = PINKY
@@ -81,13 +238,18 @@ class Pinky(Ghost):
         self.sprites = GhostSprites(self)
 
     def scatter(self):
-        self.goal = Vector2(TILEWIDTH*NCOLS, 0)
+        self.goal = Vector2(TILEWIDTH * NCOLS, 0)
 
     def chase(self):
-        self.goal = self.pacman.position + self.pacman.directions[self.pacman.direction] * TILEWIDTH * 4
+        self.goal = (
+            self.pacman.position
+            + self.pacman.directions[self.pacman.direction] * TILEWIDTH * 4
+        )
 
 
 class Inky(Ghost):
+    """Inky is the blue ghost."""
+
     def __init__(self, node, pacman=None, blinky=None):
         Ghost.__init__(self, node, pacman, blinky)
         self.name = INKY
@@ -95,15 +257,20 @@ class Inky(Ghost):
         self.sprites = GhostSprites(self)
 
     def scatter(self):
-        self.goal = Vector2(TILEWIDTH*NCOLS, TILEHEIGHT*NROWS)
+        self.goal = Vector2(TILEWIDTH * NCOLS, TILEHEIGHT * NROWS)
 
     def chase(self):
-        vec1 = self.pacman.position + self.pacman.directions[self.pacman.direction] * TILEWIDTH * 2
+        vec1 = (
+            self.pacman.position
+            + self.pacman.directions[self.pacman.direction] * TILEWIDTH * 2
+        )
         vec2 = (vec1 - self.blinky.position) * 2
         self.goal = self.blinky.position + vec2
 
 
 class Clyde(Ghost):
+    """Clyde is the orange ghost."""
+
     def __init__(self, node, pacman=None, blinky=None):
         Ghost.__init__(self, node, pacman, blinky)
         self.name = CLYDE
@@ -111,62 +278,179 @@ class Clyde(Ghost):
         self.sprites = GhostSprites(self)
 
     def scatter(self):
-        self.goal = Vector2(0, TILEHEIGHT*NROWS)
+        self.goal = Vector2(0, TILEHEIGHT * NROWS)
 
     def chase(self):
         d = self.pacman.position - self.position
         ds = d.magnitudeSquared()
-        if ds <= (TILEWIDTH * 8)**2:
+        if ds <= (TILEWIDTH * 8) ** 2:
             self.scatter()
         else:
-            self.goal = self.pacman.position + self.pacman.directions[self.pacman.direction] * TILEWIDTH * 4
+            self.goal = (
+                self.pacman.position
+                + self.pacman.directions[self.pacman.direction] * TILEWIDTH * 4
+            )
 
 
-class GhostGroup(object):
-    def __init__(self, node, pacman):
+class GhostGroup:
+    """
+    Class is used to manage a group of ghost entities in a game or simulation.
+
+    It provides methods for updating their behavior, changing their states,
+    rendering them, and performing other group-level actions.
+
+    Attributes
+    ----------
+    blinky : Blinky
+        The red ghost.
+    pinky : Pinky
+        The pink ghost.
+    inky : Inky
+        The blue ghost.
+    clyde : Clyde
+        The orange ghost.
+    ghosts : list
+        A list of ghost entities.
+
+    Methods
+    -------
+    __iter__()
+        Returns an iterator for the ghosts attribute.
+    update(dt)
+        Calls the update method for each ghost entity in the group, effectively
+        updating their positions and behavior based on elapsed time (dt).
+    startFreight()
+        Initiates freight mode for all the ghost entities in the group by
+        calling the startFreight method on each ghost.
+    setSpawnNode(node)
+        Sets the spawn node for all ghost entities in the group by calling
+        the setSpawnNode method on each ghost.
+    updatePoints()
+        Updates the points attribute for all ghost entities by doubling
+        their current points.
+    resetPoints()
+        Resets the points attribute for all ghost entities to 200.
+    hide()
+        Sets the visible attribute to False for all ghost entities,
+        effectively hiding them.
+    show()
+        Sets the visible attribute to True for all ghost entities,
+        effectively showing them.
+    reset()
+        Calls the reset method on each ghost entity to reset their
+        attributes and state.
+    render(screen)
+        Calls the render method on each ghost entity to render them on
+        the game screen.
+    """
+
+    def __init__(self, node: "Node", pacman: "Pacman") -> None:
+        """
+        Parameters
+        ----------
+        node : Node
+            The node that the ghosts should be positioned at.
+        pacman : Pacman
+            The player character.
+        """
         self.blinky = Blinky(node, pacman)
         self.pinky = Pinky(node, pacman)
         self.inky = Inky(node, pacman, self.blinky)
         self.clyde = Clyde(node, pacman)
         self.ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
-    def __iter__(self):
+    def __iter__(self) -> iter:
+        """
+        Returns
+        -------
+        iter
+            An iterator for the ghosts attribute.
+        """
         return iter(self.ghosts)
 
-    def update(self, dt):
+    def update(self, dt: int) -> None:
+        """
+        Calls the update method for each ghost entity in the group, effectively
+        updating their positions and behavior based on elapsed time (dt).
+
+        Parameters
+        ----------
+        dt : int
+            The time increment.
+        """
         for ghost in self:
             ghost.update(dt)
 
-    def startFreight(self):
+    def startFreight(self) -> None:
+        """
+        Initiates freight mode for all the ghost entities in the group by
+        calling the startFreight method on each ghost.
+        """
         for ghost in self:
             ghost.startFreight()
         self.resetPoints()
 
-    def setSpawnNode(self, node):
+    def setSpawnNode(self, node: "Node") -> None:
+        """
+        Sets the spawn node for all ghost entities in the group by calling
+        the setSpawnNode method on each ghost.
+
+        Parameters
+        ----------
+        node : Node
+            The node that the ghosts should spawn at.
+        """
         for ghost in self:
             ghost.setSpawnNode(node)
 
-    def updatePoints(self):
+    def updatePoints(self) -> None:
+        """
+        Updates the points attribute for all ghost entities by doubling
+        their current points.
+        """
         for ghost in self:
             ghost.points *= 2
 
-    def resetPoints(self):
+    def resetPoints(self) -> None:
+        """
+        Resets the points attribute for all ghost entities to 200.
+        """
         for ghost in self:
             ghost.points = 200
 
-    def hide(self):
+    def hide(self) -> None:
+        """
+        Sets the visible attribute to False for all ghost entities,
+        effectively hiding them.
+        """
         for ghost in self:
             ghost.visible = False
 
-    def show(self):
+    def show(self) -> None:
+        """
+        Sets the visible attribute to True for all ghost entities,
+        effectively showing them.
+        """
         for ghost in self:
             ghost.visible = True
 
-    def reset(self):
+    def reset(self) -> None:
+        """
+        Calls the reset method on each ghost entity to reset their
+        attributes and state.
+        """
         for ghost in self:
             ghost.reset()
 
-    def render(self, screen):
+    def render(self, screen: "pygame.Surface") -> None:
+        """
+        Calls the render method on each ghost entity to render them on
+        the game screen.
+
+        Parameters
+        ----------
+        screen : pygame.Surface
+            The game screen.
+        """
         for ghost in self:
             ghost.render(screen)
-
