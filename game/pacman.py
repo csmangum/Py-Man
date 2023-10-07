@@ -9,8 +9,8 @@ from sprites import PacmanSprites
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from nodes import Node
-    from ghosts import Ghost
+    from game.nodes import Node
+    from game.ghosts import Ghost
 
 
 class Pacman(Entity):
@@ -51,7 +51,7 @@ class Pacman(Entity):
         Checks if the entity has collided with another entity
     """
 
-    def __init__(self, node: Node) -> None:
+    def __init__(self, node: 'Node') -> None:
         Entity.__init__(self, node)
         self.name = PACMAN
         self.color = YELLOW
