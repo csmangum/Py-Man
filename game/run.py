@@ -409,6 +409,11 @@ class GameController:
     def updateScore(self, points) -> None:
         """
         Updates the player's score.
+
+        Parameters
+        ----------
+        points : int
+            The amount of points to add to the score
         """
         self.score += points
         self.textgroup.updateScore(self.score)
