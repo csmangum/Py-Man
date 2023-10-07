@@ -240,8 +240,8 @@ class GameController:
         """
         Checks for user input events, like quitting the game or pausing.
 
-        1. If the user presses the space bar, the game is paused.
-        2. If the user presses the escape key, the game is exited.
+        If the user presses the space bar, the game is paused.
+        If the user presses the escape key, the game is exited.
         """
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -261,10 +261,10 @@ class GameController:
         """
         Checks if Pacman has eaten any pellets and handles the consequences.
 
-        1. If Pacman eats a pellet, the pellet is removed from the pellet list,
-            the score is updated, and the ghost freight????(sp) mode is started if Pacman
+        If Pacman eats a pellet, the pellet is removed from the pellet list, the
+            score is updated, and the ghost freight????(sp) mode is started if Pacman
             eats a power pellet.
-        2. If Pacman eats all the pellets, the background flashes and the game is
+        If Pacman eats all the pellets, the background flashes and the game is
             paused for 3 seconds before starting the next level.
         """
         pellet = self.pacman.eatPellets(self.pellets.pelletList)
@@ -287,10 +287,10 @@ class GameController:
         """
         Checks for collisions between Pacman and the ghosts and handles the outcomes.
 
-        1. If Pacman collides with a ghost in freight mode, the ghost and Pacman
+        If Pacman collides with a ghost in freight mode, the ghost and Pacman
             are hidden, the score is updated, and the ghost is sent back to its
             spawn node.
-        2. If Pacman collides with a ghost in any other mode, Pacman dies and the
+        If Pacman collides with a ghost in any other mode, Pacman dies and the
             game is paused for 3 seconds before restarting the level.
         """
         for ghost in self.ghosts:
@@ -327,8 +327,8 @@ class GameController:
         """
         Checks for events related to the fruit, like if Pacman has eaten it.
 
-        1. If Pacman eats the fruit, the score is updated and the fruit is removed.
-        2. If the fruit is destroyed, the fruit is removed.
+        If Pacman eats the fruit, the score is updated and the fruit is removed.
+        If the fruit is destroyed, the fruit is removed.
         """
         if self.pellets.numEaten == 50 or self.pellets.numEaten == 140:
             if self.fruit is None:
