@@ -406,7 +406,7 @@ class GameController:
         self.fruit = None
         self.textgroup.showText(READYTXT)
 
-    def updateScore(self, points) -> None:
+    def updateScore(self, points: int) -> None:
         """
         Updates the player's score.
 

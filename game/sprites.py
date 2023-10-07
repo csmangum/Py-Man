@@ -2,8 +2,14 @@ import pygame
 from constants import *
 import numpy as np
 from animation import Animator
+from typing import TYPE_CHECKING
 
 from abc import ABC, abstractmethod
+
+if TYPE_CHECKING:
+    from pacman import Pacman
+    from ghost import Ghost
+    from fruit import Fruit
 
 BASETILEWIDTH = 16  # The width of a tile in the sprite sheet
 BASETILEHEIGHT = 16  # The height of a tile in the sprite sheet
@@ -47,7 +53,7 @@ class Spritesheet(ABC):
         height = int(self.sheet.get_height() / BASETILEHEIGHT * TILEHEIGHT)
         self.sheet = pygame.transform.scale(self.sheet, (width, height))
 
-    def getImage(self, x, y, width, height) -> pygame.Surface:
+    def getImage(self, x: int, y: int, width: int, height: int) -> pygame.Surface:
         """
         Retrieves a specific sprite from the sprite sheet based on the given
         x, y, width, and height parameters.
@@ -105,7 +111,7 @@ class PacmanSprites(Spritesheet):
         Returns the image at the specified x and y coordinates.
     """
 
-    def __init__(self, entity) -> None:
+    def __init__(self, entity: "Pacman") -> None:
         """
         Calls the initialization method of the parent Spritesheet class.
 
@@ -163,7 +169,7 @@ class PacmanSprites(Spritesheet):
             loop=False,
         )
 
-    def update(self, dt) -> None:
+    def update(self, dt: float) -> None:
         """
         Updates the image of the associated entity based on its current state
         and direction.
@@ -211,7 +217,7 @@ class PacmanSprites(Spritesheet):
         """
         return self.getImage(8, 0)
 
-    def getImage(self, x, y) -> pygame.Surface:
+    def getImage(self, x: int, y: int) -> pygame.Surface:
         """
         Overrides the getImage method from the parent Spritesheet class to
         always retrieve a sprite of size 2 * TILEWIDTH by 2 * TILEHEIGHT.
@@ -264,7 +270,7 @@ class GhostSprites(Spritesheet):
         Returns the image at the specified x and y coordinates.
     """
 
-    def __init__(self, entity) -> None:
+    def __init__(self, entity: "Ghost") -> None:
         """
         Calls the initialization method of the parent Spritesheet class.
 
@@ -286,7 +292,7 @@ class GhostSprites(Spritesheet):
         self.entity = entity
         self.entity.image = self.getStartImage()
 
-    def update(self, dt) -> None:
+    def update(self, dt: float) -> None:
         """
         Updates the image of the associated ghost entity based on its current
         state, mode, and direction.
@@ -334,7 +340,7 @@ class GhostSprites(Spritesheet):
         """
         return self.getImage(self.x[self.entity.name], 4)
 
-    def getImage(self, x, y) -> pygame.Surface:
+    def getImage(self, x: int, y: int) -> pygame.Surface:
         """
         Overrides the getImage method from the parent Spritesheet class to
         always retrieve a sprite of size 2 * TILEWIDTH by 2 * TILEHEIGHT
@@ -375,7 +381,7 @@ class FruitSprites(Spritesheet):
         Returns the image at the specified x and y coordinates.
     """
 
-    def __init__(self, entity, level) -> None:
+    def __init__(self, entity: "Fruit", level: int) -> None:
         """
         Calls the initialization method of the parent Spritesheet class.
 
@@ -410,7 +416,7 @@ class FruitSprites(Spritesheet):
         }
         self.entity.image = self.getStartImage(level % len(self.fruits))
 
-    def getStartImage(self, key) -> pygame.Surface:
+    def getStartImage(self, key: int) -> pygame.Surface:
         """
         Returns the starting image for the fruit based on the provided key
         (which is determined by the level).
@@ -427,7 +433,7 @@ class FruitSprites(Spritesheet):
         """
         return self.getImage(*self.fruits[key])
 
-    def getImage(self, x, y) -> pygame.Surface:
+    def getImage(self, x: int, y: int) -> pygame.Surface:
         """
         Overrides the getImage method from the parent Spritesheet class to
         always retrieve a sprite of size 2 * TILEWIDTH by 2 * TILEHEIGHT.
@@ -467,7 +473,7 @@ class LifeSprites(Spritesheet):
         Gets the image at the specified x and y coordinates.
     """
 
-    def __init__(self, numlives) -> None:
+    def __init__(self, numlives: int) -> None:
         """
         Calls the initialization method of the parent Spritesheet class.
 
@@ -489,7 +495,7 @@ class LifeSprites(Spritesheet):
         if len(self.images) > 0:
             self.images.pop(0)
 
-    def resetLives(self, numlives) -> None:
+    def resetLives(self, numlives: int) -> None:
         """
         Resets the self.images list based on the number of lives provided.
         Each life is represented by an image, and the method populates the list
@@ -504,7 +510,7 @@ class LifeSprites(Spritesheet):
         for i in range(numlives):
             self.images.append(self.getImage(0, 0))
 
-    def getImage(self, x, y) -> pygame.Surface:
+    def getImage(self, x: int, y: int) -> pygame.Surface:
         """
         Overrides the getImage method from the parent Spritesheet class to
         always retrieve a sprite of size 2 * TILEWIDTH by 2 * TILEHEIGHT.
@@ -545,7 +551,7 @@ class MazeSprites(Spritesheet):
         Rotates the provided sprite by a specified angle.
     """
 
-    def __init__(self, mazefile, rotfile) -> None:
+    def __init__(self, mazefile: str, rotfile: str) -> None:
         """
         Calls the initialization method of the parent Spritesheet class.
 
@@ -565,7 +571,7 @@ class MazeSprites(Spritesheet):
         self.data = self.readMazeFile(mazefile)
         self.rotdata = self.readMazeFile(rotfile)
 
-    def getImage(self, x, y) -> pygame.Surface:
+    def getImage(self, x: int, y: int) -> pygame.Surface:
         """
         Overrides the getImage method from the parent Spritesheet class to
         always retrieve a sprite of size TILEWIDTH by TILEHEIGHT.
@@ -584,7 +590,7 @@ class MazeSprites(Spritesheet):
         """
         return Spritesheet.getImage(self, x, y, TILEWIDTH, TILEHEIGHT)
 
-    def readMazeFile(self, mazefile) -> np.ndarray:
+    def readMazeFile(self, mazefile: str) -> np.ndarray:
         """
         Reads the maze layout from a file and returns it as a NumPy array of strings.
 
@@ -600,7 +606,7 @@ class MazeSprites(Spritesheet):
         """
         return np.loadtxt(mazefile, dtype="<U1")
 
-    def constructBackground(self, background, y) -> pygame.Surface:
+    def constructBackground(self, background: pygame.Surface, y: int) -> pygame.Surface:
         """
         Constructs the maze background by iterating over the maze data (self.data).
 
@@ -637,7 +643,7 @@ class MazeSprites(Spritesheet):
 
         return background
 
-    def rotate(self, sprite, value) -> pygame.Surface:
+    def rotate(self, sprite: pygame.surface, value: int) -> pygame.Surface:
         """
         Rotates the provided sprite by a specified angle.
 
