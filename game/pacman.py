@@ -51,7 +51,7 @@ class PacMan(Entity):
         Checks if the entity has collided with another entity
     """
 
-    def __init__(self, node: 'Node') -> None:
+    def __init__(self, node: "Node") -> None:
         Entity.__init__(self, node)
         self.name = PACMAN
         self.color = YELLOW
@@ -95,6 +95,7 @@ class PacMan(Entity):
         self.sprites.update(dt)
         self.position += self.directions[self.direction] * self.speed * dt
         direction = self.getValidKey()
+
         if self.overshotTarget():
             self.node = self.target
             if self.node.neighbors[PORTAL] is not None:
@@ -205,36 +206,71 @@ class PacMan(Entity):
 class PacManFSM(PacMan):
     def __init__(self):
         self.state = "Search"
+        self.environment = None
 
     def update(self, environment):
         if self.state == "Search":
-            if power_pellet_nearby(environment):
+            if self.power_pellet_nearby(environment):
                 self.state = "Chase"
-            elif non_vulnerable_ghost_nearby(environment):
+            elif self.non_vulnerable_ghost_nearby(environment):
                 self.state = "Evade"
 
         elif self.state == "Chase":
-            if ate_power_pellet(environment) and vulnerable_ghost_nearby(environment):
+            if self.ate_power_pellet(environment) and self.vulnerable_ghost_nearby(
+                environment
+            ):
                 self.state = "Attack"
-            elif non_vulnerable_ghost_nearby(environment):
+            elif self.non_vulnerable_ghost_nearby(environment):
                 self.state = "Evade"
 
         elif self.state == "Attack":
-            if not vulnerable_ghost_nearby(environment) or ate_vulnerable_ghost(environment):
+            if not self.vulnerable_ghost_nearby(
+                environment
+            ) or self.ate_vulnerable_ghost(environment):
                 self.state = "Search"
 
         elif self.state == "Evade":
-            if not non_vulnerable_ghost_nearby(environment):
+            if not self.non_vulnerable_ghost_nearby(environment):
                 self.state = "Search"
-            elif power_pellet_nearby(environment):
+            elif self.power_pellet_nearby(environment):
                 self.state = "Chase"
+
+    def power_pellet_nearby(self, environment):
+        return False
+
+    def non_vulnerable_ghost_nearby(self, environment):
+        return False
+
+    def vulnerable_ghost_nearby(self, environment):
+        return False
+
+    def ate_power_pellet(self, environment):
+        return False
+
+    def ate_vulnerable_ghost(self, environment):
+        return False
 
     def action(self):
         if self.state == "Search":
-            return move_towards_nearest_pellet()
+            return self.move_towards_nearest_pellet()
         elif self.state == "Chase":
-            return move_towards_power_pellet()
+            return self.move_towards_power_pellet()
         elif self.state == "Attack":
-            return move_towards_vulnerable_ghost()
+            return self.move_towards_vulnerable_ghost()
         elif self.state == "Evade":
-            return move_away_from_ghost()
+            return self.move_away_from_ghost()
+
+    def move_towards_nearest_pellet(self, environment):
+        # Search algo for nearest pellet in 4 directions (up, down, left, right)
+        # stops when it hits a wall or a pellet, returns distance, shortest distance is chosen
+        # get the N spaces in a provided direction
+        return None
+
+    def move_towards_power_pellet(self):
+        return None
+
+    def move_towards_vulnerable_ghost(self):
+        return None
+
+    def move_away_from_ghost(self):
+        return None
