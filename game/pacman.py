@@ -200,3 +200,41 @@ class Pacman(Entity):
         if dSquared <= rSquared:
             return True
         return False
+
+
+class PacManFSM:
+    def __init__(self):
+        self.state = "Search"
+
+    def update(self, environment):
+        if self.state == "Search":
+            if power_pellet_nearby(environment):
+                self.state = "Chase"
+            elif non_vulnerable_ghost_nearby(environment):
+                self.state = "Evade"
+
+        elif self.state == "Chase":
+            if ate_power_pellet(environment) and vulnerable_ghost_nearby(environment):
+                self.state = "Attack"
+            elif non_vulnerable_ghost_nearby(environment):
+                self.state = "Evade"
+
+        elif self.state == "Attack":
+            if not vulnerable_ghost_nearby(environment) or ate_vulnerable_ghost(environment):
+                self.state = "Search"
+
+        elif self.state == "Evade":
+            if not non_vulnerable_ghost_nearby(environment):
+                self.state = "Search"
+            elif power_pellet_nearby(environment):
+                self.state = "Chase"
+
+    def action(self):
+        if self.state == "Search":
+            return move_towards_nearest_pellet()
+        elif self.state == "Chase":
+            return move_towards_power_pellet()
+        elif self.state == "Attack":
+            return move_towards_vulnerable_ghost()
+        elif self.state == "Evade":
+            return move_away_from_ghost()
