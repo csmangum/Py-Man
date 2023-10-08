@@ -10,7 +10,7 @@ from pauser import Pause
 from text import TextGroup
 from sprites import LifeSprites
 from sprites import MazeSprites
-from mazedata import MazeData
+from maze import MazeData
 
 
 class GameController:
@@ -146,17 +146,17 @@ class GameController:
         """
         self.mazedata.loadMaze(self.level)
         self.mazesprites = MazeSprites(
-            "game/" + self.mazedata.obj.name + ".txt",
-            "game/" + self.mazedata.obj.name + "_rotation.txt",
+            "game/assets/" + self.mazedata.obj.name + ".txt",
+            "game/assets/" + self.mazedata.obj.name + "_rotation.txt",
         )
         self.setBackground()
-        self.nodes = NodeGroup("game/" + self.mazedata.obj.name + ".txt")
+        self.nodes = NodeGroup("game/assets/" + self.mazedata.obj.name + ".txt")
         self.mazedata.obj.setPortalPairs(self.nodes)
         self.mazedata.obj.connectHomeNodes(self.nodes)
         self.pacman = Pacman(
             self.nodes.getNodeFromTiles(*self.mazedata.obj.pacmanStart)
         )
-        self.pellets = PelletGroup("game/" + self.mazedata.obj.name + ".txt")
+        self.pellets = PelletGroup("game/assets/" + self.mazedata.obj.name + ".txt")
         self.ghosts = GhostGroup(self.nodes.getStartTempNode(), self.pacman)
 
         self.ghosts.pinky.setStartNode(

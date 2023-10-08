@@ -109,7 +109,7 @@ class Text(ABC):
         self.lifespan = time
         self.label = None
         self.destroy = False
-        self.setupFont("game/PressStart2P-Regular.ttf")
+        self.setupFont("game/assets/PressStart2P-Regular.ttf")
         self.createLabel()
 
     def setupFont(self, fontpath: str) -> None:
