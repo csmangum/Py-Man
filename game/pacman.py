@@ -238,6 +238,30 @@ class PacManFSM(PacMan):
     def power_pellet_nearby(self, environment):
         return False
 
+    def power_pellet_nearby(pacman_position, game_board, threshold_distance=3):
+        """
+        Check if a power pellet is nearby Pac-Man.
+    
+        :param pacman_position: A tuple (x, y) representing Pac-Man's position.
+        :param game_board: A 2D list representing the game board.
+        :param threshold_distance: The maximum distance to consider "nearby".
+        :return: True if a power pellet is nearby, False otherwise.
+        """
+        pacman_x, pacman_y = pacman_position
+    
+        # Iterate over the game board
+        for y in range(len(game_board)):
+            for x in range(len(game_board[y])):
+                # Check if the current cell contains a power pellet
+                if game_board[y][x] == "POWER_PELLET":
+                    # Calculate the Manhattan distance between Pac-Man and the power pellet
+                    distance = abs(pacman_x - x) + abs(pacman_y - y)
+                    if distance <= threshold_distance:
+                        return True
+    
+        return False
+
+
     def non_vulnerable_ghost_nearby(self, environment):
         return False
 
