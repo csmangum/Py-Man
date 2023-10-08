@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from game.nodes import Node
-    from game.pacman import Pacman
+    from game.pacman import PacMan
 
 
 class Ghost(Entity):
@@ -344,7 +344,7 @@ class GhostGroup:
         the game screen.
     """
 
-    def __init__(self, node: "Node", pacman: "Pacman") -> None:
+    def __init__(self, node: "Node", pacman: "PacMan") -> None:
         """
         Parameters
         ----------

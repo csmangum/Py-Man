@@ -4,7 +4,7 @@ from pygame.locals import *
 from vector import Vector2  #! Why is this not used?
 from constants import *
 from entity import Entity
-from sprites import PacmanSprites
+from sprites import PacManSprites
 
 from typing import TYPE_CHECKING
 
@@ -13,11 +13,11 @@ if TYPE_CHECKING:
     from game.ghosts import Ghost
 
 
-class Pacman(Entity):
+class PacMan(Entity):
     """
-    Pacman class
+    PacMan class
 
-    Pacman is the main character of the game. He is controlled by the player
+    PacMan is the main character of the game. He is controlled by the player
     and must eat all the pellets in the maze while avoiding the ghosts.
 
     Attributes
@@ -30,7 +30,7 @@ class Pacman(Entity):
         The direction the entity is moving
     alive : bool
         Whether or not the entity is alive
-    sprites : PacmanSprites
+    sprites : PacManSprites
         The sprites for the entity
 
     Methods
@@ -56,9 +56,9 @@ class Pacman(Entity):
         self.name = PACMAN
         self.color = YELLOW
         self.direction = LEFT
-        self.setBetweenNodes(LEFT)  # Pacman starts between nodes 1 and 2
+        self.setBetweenNodes(LEFT)  # PacMan starts between nodes 1 and 2
         self.alive = True
-        self.sprites = PacmanSprites(self)
+        self.sprites = PacManSprites(self)
 
     def reset(self) -> None:
         """
@@ -202,7 +202,7 @@ class Pacman(Entity):
         return False
 
 
-class PacManFSM:
+class PacManFSM(PacMan):
     def __init__(self):
         self.state = "Search"
 

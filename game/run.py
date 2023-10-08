@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from constants import *
-from pacman import Pacman
+from pacman import PacMan
 from nodes import NodeGroup
 from pellets import PelletGroup
 from ghosts import GhostGroup
@@ -153,7 +153,7 @@ class GameController:
         self.nodes = NodeGroup("game/assets/" + self.mazedata.obj.name + ".txt")
         self.mazedata.obj.setPortalPairs(self.nodes)
         self.mazedata.obj.connectHomeNodes(self.nodes)
-        self.pacman = Pacman(
+        self.pacman = PacMan(
             self.nodes.getNodeFromTiles(*self.mazedata.obj.pacmanStart)
         )
         self.pellets = PelletGroup("game/assets/" + self.mazedata.obj.name + ".txt")

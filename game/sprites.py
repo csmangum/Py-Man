@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
 
 if TYPE_CHECKING:
-    from pacman import Pacman
-    from ghost import Ghost
+    from pacman import PacMan
+    from ghosts import Ghost
     from fruit import Fruit
 
 BASETILEWIDTH = 16  # The width of a tile in the sprite sheet
@@ -79,7 +79,7 @@ class Spritesheet(ABC):
         return self.sheet.subsurface(self.sheet.get_clip())
 
 
-class PacmanSprites(Spritesheet):
+class PacManSprites(Spritesheet):
     """
     This class provides a structured way to manage and update the visual
     representation of the Pac-Man character based on its state and direction.
@@ -111,7 +111,7 @@ class PacmanSprites(Spritesheet):
         Returns the image at the specified x and y coordinates.
     """
 
-    def __init__(self, entity: "Pacman") -> None:
+    def __init__(self, entity: "PacMan") -> None:
         """
         Calls the initialization method of the parent Spritesheet class.
 
