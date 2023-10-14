@@ -1,3 +1,4 @@
+from random import random
 from typing import Union
 import pygame
 from pygame.locals import *
@@ -208,44 +209,74 @@ class PacManFSM(PacMan):
         self.state = "Search"
         self.environment = None
 
-    def update(self, environment):
+    def update(self, dt):
+        """
+        While in the seek pellets state, Ms Pac-Man moves randomly up until it 
+        detects a pellet and then follows a pathfinding algorithm to eat as many  
+        pellets as possible and as soon as possible. 
+        
+        If a power pill is eaten, then Ms PacMan moves to the chase ghosts state 
+        in which it can use any tree-search algorithm  to chase the blue ghosts. 
+        
+        When the ghosts start flashing, Ms Pac-Man moves to the evade ghosts 
+        state in which it uses tree search to evade ghosts so that none is 
+        visible within a distance; when that happens Ms Pac-Man moves back to 
+        the seek pellets state. 
+        """
+        
+        self.sprites.update(dt)
+        self.position += self.directions[self.direction] * self.speed * dt
+        
         if self.state == "Search":
-            if self.power_pellet_nearby(environment):
+            locations = self.validDirections()
+            random_location = random.choice(locations)
+            if self.power_pellet_nearby():
                 self.state = "Chase"
-            elif self.non_vulnerable_ghost_nearby(environment):
+            elif self.non_vulnerable_ghost_nearby():
                 self.state = "Evade"
 
         elif self.state == "Chase":
-            if self.ate_power_pellet(environment) and self.vulnerable_ghost_nearby(
-                environment
-            ):
+            if self.ate_power_pellet() and self.vulnerable_ghost_nearby():
                 self.state = "Attack"
-            elif self.non_vulnerable_ghost_nearby(environment):
+            elif self.non_vulnerable_ghost_nearby():
                 self.state = "Evade"
 
         elif self.state == "Attack":
-            if not self.vulnerable_ghost_nearby(
-                environment
-            ) or self.ate_vulnerable_ghost(environment):
+            if not self.vulnerable_ghost_nearby() or self.ate_vulnerable_ghost():
                 self.state = "Search"
 
         elif self.state == "Evade":
-            if not self.non_vulnerable_ghost_nearby(environment):
+            if not self.non_vulnerable_ghost_nearby():
                 self.state = "Search"
-            elif self.power_pellet_nearby(environment):
+            elif self.power_pellet_nearby():
                 self.state = "Chase"
+                
+        self.action()
 
-    def power_pellet_nearby(self, environment):
-        return False
+    def power_pellet_nearby(self):
+        """
+        Checks the direct up, down, left, and right cells for power pellets.
+        
+        Parameters
+        ----------
+        environment : dict
+            The game environment
+            
+        Returns
+        -------
+        bool
+            True if a power pellet is found, False otherwise
+        """
+        
 
-    def power_pellet_nearby(pacman_position, game_board, threshold_distance=3):
+    def power_pellet_nearby(self, pacman_position, game_board, threshold_distance=3):
         """
         Check if a power pellet is nearby Pac-Man.
     
-        :param pacman_position: A tuple (x, y) representing Pac-Man's position.
-        :param game_board: A 2D list representing the game board.
-        :param threshold_distance: The maximum distance to consider "nearby".
-        :return: True if a power pellet is nearby, False otherwise.
+        Parameters
+        ----------
+        pacman_position : tuple
+
         """
         pacman_x, pacman_y = pacman_position
     
@@ -276,7 +307,8 @@ class PacManFSM(PacMan):
 
     def action(self):
         if self.state == "Search":
-            return self.move_towards_nearest_pellet()
+            locations = self.validDirections()
+            
         elif self.state == "Chase":
             return self.move_towards_power_pellet()
         elif self.state == "Attack":
@@ -298,3 +330,69 @@ class PacManFSM(PacMan):
 
     def move_away_from_ghost(self):
         return None
+
+
+class StateMachine:
+    def __init__(self):
+        self.state = 'Seek pellets'
+
+    def update(self, conditions):
+        
+        self.sprites.update(dt)
+        self.position += self.directions[self.direction] * self.speed * dt
+        direction = self.getValidKey()
+        
+        if self.state == 'Seek pellets':
+            # Ms Pac-Man moves randomly until it detects a pellet 
+            # and then uses a pathfinding algorithm to eat the pellets.
+            # For simplicity, we will just print a statement here.
+            
+            if conditions['pellet_detected']:
+                print("Pellet detected! Following pathfinding algorithm...")
+            
+            if conditions['ghost_in_sight']:
+                self.state = 'Evade Ghosts'
+            elif conditions['power_pill_eaten']:
+                self.state = 'Chase Ghosts'
+                
+        elif self.state == 'Chase Ghosts':
+            # Ms Pac-Man uses a tree-search algorithm to chase the blue ghosts.
+            print("Using tree-search algorithm to chase blue ghosts...")
+            if conditions['ghosts_flashing']:
+                self.state = 'Evade Ghosts'
+            elif not conditions['visible_ghost']:
+                self.state = 'Seek pellets'
+
+        elif self.state == 'Evade Ghosts':
+            # Ms Pac-Man uses tree search to evade ghosts 
+            # so that none is visible within a distance.
+            print("Using tree search to evade ghosts...")
+            if not conditions['ghost_in_sight']:
+                self.state = 'Seek pellets'
+                
+        return self.state
+
+# Example usage:
+
+sm = StateMachine()
+
+# Conditions are represented as a dictionary
+conditions = {
+    'ghost_in_sight': False,
+    'power_pill_eaten': False,
+    'ghosts_flashing': False,
+    'visible_ghost': False,
+    'pellet_detected': False
+}
+
+print(sm.update(conditions))  # Output: Seek pellets behavior and then the state
+
+conditions['ghost_in_sight'] = True
+print(sm.update(conditions))  # Output: Evade ghosts behavior and then the state
+
+conditions['ghost_in_sight'] = False
+conditions['pellet_detected'] = True
+print(sm.update(conditions))  # Output: Seek pellets behavior (with pathfinding) and then the state
+
+conditions['power_pill_eaten'] = True
+print(sm.update(conditions))  # Output: Chase ghosts behavior and then the state

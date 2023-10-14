@@ -180,6 +180,9 @@ class Entity(ABC):
         """
         Gets the new target node for the entity, based on the given direction.
 
+        For example, if the entity is moving up, the new target node will be the
+        node above the entity's current node.
+
         Parameters
         ----------
         direction : int
@@ -244,6 +247,12 @@ class Entity(ABC):
     def validDirections(self) -> list:
         """
         Gets a list of valid directions for the entity.
+
+        It checks if the entity can move in each direction, and if so, adds it
+        to the list of valid directions.
+
+        If the entity cannot move in any direction, it adds the opposite of its
+        current direction to the list of valid directions.
 
         Returns
         -------
