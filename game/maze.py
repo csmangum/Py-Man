@@ -1,24 +1,124 @@
+from abc import ABC
 from constants import *
 
-class MazeBase(object):
-    def __init__(self):
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from game.nodes import Node
+    from game.ghosts import Ghost
+
+
+class MazeBase(ABC):
+    """
+    Base class for mazes. This class is not meant to be instantiated directly.
+
+    Attributes
+    ----------
+    name : str
+        The name of the maze.
+    portalPairs : dict
+        A dictionary of portal pairs. The key is the portal pair number, and
+        the value is a tuple of the two portal locations.
+    homeoffset : tuple
+        The offset of the home nodes from the maze nodes.
+    homenodeconnectLeft : tuple
+        The location of the left home node.
+    homenodeconnectRight : tuple
+        The location of the right home node.
+    pacmanStart : tuple
+        The location of the pacman start node.
+    fruitStart : tuple
+        The location of the fruit start node.
+    ghostNodeDeny : dict
+        A dictionary of ghost node deny lists. The key is the direction, and the
+        value is a list of tuples of the locations of the nodes to deny access to.
+
+    Methods
+    -------
+    setPortalPairs(nodes)
+        Sets the portal pairs in the nodes object.
+    connectHomeNodes(nodes)
+        Connects the home nodes in the nodes object.
+    addOffset(x, y)
+        Adds the home offset to the given coordinates.
+    denyGhostsAccess(ghosts, nodes)
+        Denies the ghosts access to the home nodes.
+    """
+
+    def __init__(self) -> None:
         self.portalPairs = {}
         self.homeoffset = (0, 0)
-        self.ghostNodeDeny = {UP:(), DOWN:(), LEFT:(), RIGHT:()}
+        self.ghostNodeDeny = {UP: (), DOWN: (), LEFT: (), RIGHT: ()}
 
-    def setPortalPairs(self, nodes):
+    def setPortalPairs(self, nodes: "Node") -> None:
+        """
+        Takes a nodes argument and sets the portal pairs in the nodes object.
+
+        Iterates through the portal pairs stored in the portalPairs dictionary
+        and sets these portal pairs in the nodes object.
+
+        Parameters
+        ----------
+        nodes : Node
+            The nodes object to set the portal pairs in.
+        """
         for pair in list(self.portalPairs.values()):
             nodes.setPortalPair(*pair)
 
-    def connectHomeNodes(self, nodes):
+    def connectHomeNodes(self, nodes: "Node") -> None:
+        """
+        Creates home nodes with an offset specified by homeoffset using the
+        createHomeNodes method of the nodes object.
+
+        Connects the newly created home nodes to other nodes using the
+        connectHomeNodes method of the nodes object, based on directions
+        specified by homenodeconnectLeft and homenodeconnectRight.
+
+        Parameters
+        ----------
+        nodes : Node
+            The nodes object to create the home nodes in.
+        """
         key = nodes.createHomeNodes(*self.homeoffset)
         nodes.connectHomeNodes(key, self.homenodeconnectLeft, LEFT)
         nodes.connectHomeNodes(key, self.homenodeconnectRight, RIGHT)
 
-    def addOffset(self, x, y):
-        return x+self.homeoffset[0], y+self.homeoffset[1]
+    def addOffset(self, x: int, y: int) -> tuple:
+        """
+        Returns a new tuple by adding x to the first element and y to the second
+        element of the homeoffset tuple.
 
-    def denyGhostsAccess(self, ghosts, nodes):
+        This is used to calculate positions with an offset relative to the home nodes.
+
+        Parameters
+        ----------
+        x : int
+            The x offset.
+        y : int
+            The y offset.
+
+        Returns
+        -------
+        tuple
+            The new tuple with the offset added.
+        """
+        return x + self.homeoffset[0], y + self.homeoffset[1]
+
+    def denyGhostsAccess(self, ghosts: "Ghost", nodes: "Node") -> None:
+        """
+        Adds denial rules to restrict ghost access in certain directions for
+        nodes in the maze environment.
+
+        Specifically, it denies access for ghosts to certain positions with
+        offsets and directions specified in ghostNodeDeny.
+
+        Parameters
+        ----------
+        ghosts : Ghost
+            The ghosts object to deny access to.
+        nodes : Node
+            The nodes object to deny access in.
+        """
         nodes.denyAccessList(*(self.addOffset(2, 3) + (LEFT, ghosts)))
         nodes.denyAccessList(*(self.addOffset(2, 3) + (RIGHT, ghosts)))
 
@@ -28,37 +128,118 @@ class MazeBase(object):
 
 
 class Maze1(MazeBase):
+    """
+    The first maze in the game.
+
+    Attributes
+    ----------
+    name : str
+        The name of the maze.
+    portalPairs : dict
+        A dictionary of portal pairs. The key is the portal pair number, and
+        the value is a tuple of the two portal locations.
+    homeoffset : tuple
+        The offset of the home nodes from the maze nodes.
+    homenodeconnectLeft : tuple
+        The location of the left home node.
+    homenodeconnectRight : tuple
+        The location of the right home node.
+    pacmanStart : tuple
+        The location of the pacman start node.
+    fruitStart : tuple
+        The location of the fruit start node.
+    ghostNodeDeny : dict
+        A dictionary of ghost node deny lists. The key is the direction, and the
+        value is a list of tuples of the locations of the nodes to deny access to.
+    """
+
     def __init__(self):
         MazeBase.__init__(self)
         self.name = "maze1"
-        self.portalPairs = {0:((0, 17), (27, 17))}
+        self.portalPairs = {0: ((0, 17), (27, 17))}
         self.homeoffset = (11.5, 14)
         self.homenodeconnectLeft = (12, 14)
         self.homenodeconnectRight = (15, 14)
         self.pacmanStart = (15, 26)
         self.fruitStart = (9, 20)
-        self.ghostNodeDeny = {UP:((12, 14), (15, 14), (12, 26), (15, 26)), LEFT:(self.addOffset(2, 3),),
-                              RIGHT:(self.addOffset(2, 3),)}
+        self.ghostNodeDeny = {
+            UP: ((12, 14), (15, 14), (12, 26), (15, 26)),
+            LEFT: (self.addOffset(2, 3),),
+            RIGHT: (self.addOffset(2, 3),),
+        }
 
 
 class Maze2(MazeBase):
+    """
+    The second maze in the game.
+
+    Attributes
+    ----------
+    name : str
+        The name of the maze.
+    portalPairs : dict
+        A dictionary of portal pairs. The key is the portal pair number, and
+        the value is a tuple of the two portal locations.
+    homeoffset : tuple
+        The offset of the home nodes from the maze nodes.
+    homenodeconnectLeft : tuple
+        The location of the left home node.
+    homenodeconnectRight : tuple
+        The location of the right home node.
+    pacmanStart : tuple
+        The location of the pacman start node.
+    fruitStart : tuple
+        The location of the fruit start node.
+    ghostNodeDeny : dict
+        A dictionary of ghost node deny lists. The key is the direction, and the
+        value is a list of tuples of the locations of the nodes to deny access to.
+    """
+
     def __init__(self):
         MazeBase.__init__(self)
         self.name = "maze2"
-        self.portalPairs = {0:((0, 4), (27, 4)), 1:((0, 26), (27, 26))}
+        self.portalPairs = {0: ((0, 4), (27, 4)), 1: ((0, 26), (27, 26))}
         self.homeoffset = (11.5, 14)
         self.homenodeconnectLeft = (9, 14)
         self.homenodeconnectRight = (18, 14)
         self.pacmanStart = (16, 26)
         self.fruitStart = (11, 20)
-        self.ghostNodeDeny = {UP:((9, 14), (18, 14), (11, 23), (16, 23)), LEFT:(self.addOffset(2, 3),),
-                              RIGHT:(self.addOffset(2, 3),)}
+        self.ghostNodeDeny = {
+            UP: ((9, 14), (18, 14), (11, 23), (16, 23)),
+            LEFT: (self.addOffset(2, 3),),
+            RIGHT: (self.addOffset(2, 3),),
+        }
 
 
-class MazeData(object):
+class MazeData:
+    """
+    Class to load mazes.
+
+    Attributes
+    ----------
+    obj : MazeBase
+        The maze object.
+    mazedict : dict
+        A dictionary of mazes. The key is the level number, and the value is the
+        maze object.
+
+    Methods
+    -------
+    loadMaze(level)
+        Loads the maze for the given level.
+    """
+
     def __init__(self):
         self.obj = None
-        self.mazedict = {0:Maze1, 1:Maze2}
+        self.mazedict = {0: Maze1, 1: Maze2}
 
-    def loadMaze(self, level):
-        self.obj = self.mazedict[level%len(self.mazedict)]()
+    def loadMaze(self, level: int) -> None:
+        """
+        Loads the maze for the given level and stores it in the obj attribute.
+
+        Parameters
+        ----------
+        level : int
+            The level number. (0 or 1)
+        """
+        self.obj = self.mazedict[level % len(self.mazedict)]()
