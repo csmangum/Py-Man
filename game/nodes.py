@@ -63,7 +63,7 @@ class Node(ABC):
             RIGHT: [PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
         }
 
-    def denyAccess(self, direction: int, entity: "Entity") -> None:
+    def denyAccess(self, direction: int, entity: 'Entity') -> None:
         """
         Denies access for a specific entity in a given direction.
 
@@ -80,7 +80,7 @@ class Node(ABC):
         if entity.name in self.access[direction]:
             self.access[direction].remove(entity.name)
 
-    def allowAccess(self, direction: int, entity: "Entity") -> None:
+    def allowAccess(self, direction: int, entity: 'Entity') -> None:
         """
         Allows access for a specific entity in a given direction,
         enabling the entity to move in that direction from this node.
@@ -434,7 +434,7 @@ class NodeGroup(ABC):
             return self.nodesLUT[(x, y)]
         return None
 
-    def denyAccess(self, col: int, row: int, direction: int, entity: "Entity") -> None:
+    def denyAccess(self, col: int, row: int, direction: int, entity: 'Entity') -> None:
         """
         Denies access for a specific entity in a given direction from a given tile.
 
@@ -453,7 +453,7 @@ class NodeGroup(ABC):
         if node is not None:
             node.denyAccess(direction, entity)
 
-    def allowAccess(self, col: int, row: int, direction: int, entity: "Entity") -> None:
+    def allowAccess(self, col: int, row: int, direction: int, entity: 'Entity') -> None:
         """
         Allows access for a specific entity in a given direction from a given tile.
 
@@ -475,7 +475,7 @@ class NodeGroup(ABC):
             node.allowAccess(direction, entity)
 
     def denyAccessList(
-        self, col: int, row: int, direction: int, entities: List[Entity]
+        self, col: int, row: int, direction: int, entities: List['Entity']
     ) -> None:
         """
         Denies access for a list of entities in a given direction from a given tile.
@@ -495,7 +495,7 @@ class NodeGroup(ABC):
             self.denyAccess(col, row, direction, entity)
 
     def allowAccessList(
-        self, col: int, row: int, direction: int, entities: List[Entity]
+        self, col: int, row: int, direction: int, entities: List['Entity']
     ) -> None:
         """
         Allows access for a list of entities in a given direction from a given tile.
@@ -514,7 +514,7 @@ class NodeGroup(ABC):
         for entity in entities:
             self.allowAccess(col, row, direction, entity)
 
-    def denyHomeAccess(self, entity: "Entity") -> None:
+    def denyHomeAccess(self, entity: 'Entity') -> None:
         """
         Denies access for a specific entity to the home node.
 
@@ -525,7 +525,7 @@ class NodeGroup(ABC):
         """
         self.nodesLUT[self.homekey].denyAccess(DOWN, entity)
 
-    def allowHomeAccess(self, entity: "Entity") -> None:
+    def allowHomeAccess(self, entity: 'Entity') -> None:
         """
         Allows access for a specific entity to the home node.
 
@@ -536,7 +536,7 @@ class NodeGroup(ABC):
         """
         self.nodesLUT[self.homekey].allowAccess(DOWN, entity)
 
-    def denyHomeAccessList(self, entities: List[Entity]) -> None:
+    def denyHomeAccessList(self, entities: List['Entity']) -> None:
         """
         Denies access for a list of entities to the home node.
 
@@ -548,7 +548,7 @@ class NodeGroup(ABC):
         for entity in entities:
             self.denyHomeAccess(entity)
 
-    def allowHomeAccessList(self, entities: List[Entity]) -> None:
+    def allowHomeAccessList(self, entities: List['Entity']) -> None:
         """
         Allows access for a list of entities to the home node.
 
