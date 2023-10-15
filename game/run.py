@@ -146,17 +146,17 @@ class GameController:
         """
         self.mazedata.loadMaze(self.level)
         self.mazesprites = MazeSprites(
-            "game/assets/" + self.mazedata.obj.name + ".txt",
-            "game/assets/" + self.mazedata.obj.name + "_rotation.txt",
+            "assets/" + self.mazedata.obj.name + ".txt",
+            "assets/" + self.mazedata.obj.name + "_rotation.txt",
         )
         self.setBackground()
-        self.nodes = NodeGroup("game/assets/" + self.mazedata.obj.name + ".txt")
+        self.nodes = NodeGroup("assets/" + self.mazedata.obj.name + ".txt")
         self.mazedata.obj.setPortalPairs(self.nodes)
         self.mazedata.obj.connectHomeNodes(self.nodes)
         self.pacman = PacMan(
             self.nodes.getNodeFromTiles(*self.mazedata.obj.pacmanStart)
         )
-        self.pellets = PelletGroup("game/assets/" + self.mazedata.obj.name + ".txt")
+        self.pellets = PelletGroup("assets/" + self.mazedata.obj.name + ".txt")
         self.ghosts = GhostGroup(self.nodes.getStartTempNode(), self.pacman)
 
         self.ghosts.pinky.setStartNode(
