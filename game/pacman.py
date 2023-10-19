@@ -80,7 +80,7 @@ class PacMan(Entity):
         self.alive = False
         self.direction = STOP
 
-    def update(self, dt: float) -> None:
+    def update(self, game) -> None:
         """
         Updates the Pac-Man's state based on the time delta (dt).
 
@@ -93,6 +93,7 @@ class PacMan(Entity):
         dt : float
             The time delta
         """
+        dt = game.dt
         self.sprites.update(dt)
         self.position += self.directions[self.direction] * self.speed * dt
         direction = self.getValidKey()
@@ -113,8 +114,9 @@ class PacMan(Entity):
         else:
             if self.oppositeDirection(direction):
                 self.reverseDirection()
-        print(f"pacman position: {self.position}, pacman direction: {self.direction}, pacman target: {self.target.position}")
-
+        # print(
+        #     f"pacman position: {self.position}, pacman direction: {self.direction}, pacman target: {self.target.position}"
+        # )
 
     def getValidKey(self) -> str:
         """
@@ -211,24 +213,24 @@ class PacMan(Entity):
 #         self.state = 'Seek pellets'
 
 #     def update(self, conditions):
-        
+
 #         self.sprites.update(dt)
 #         self.position += self.directions[self.direction] * self.speed * dt
 #         direction = self.getValidKey()
-        
+
 #         if self.state == 'Seek pellets':
-#             # Ms Pac-Man moves randomly until it detects a pellet 
+#             # Ms Pac-Man moves randomly until it detects a pellet
 #             # and then uses a pathfinding algorithm to eat the pellets.
 #             # For simplicity, we will just print a statement here.
-            
+
 #             if conditions['pellet_detected']:
 #                 print("Pellet detected! Following pathfinding algorithm...")
-            
+
 #             if conditions['ghost_in_sight']:
 #                 self.state = 'Evade Ghosts'
 #             elif conditions['power_pill_eaten']:
 #                 self.state = 'Chase Ghosts'
-                
+
 #         elif self.state == 'Chase Ghosts':
 #             # Ms Pac-Man uses a tree-search algorithm to chase the blue ghosts.
 #             print("Using tree-search algorithm to chase blue ghosts...")
@@ -238,12 +240,12 @@ class PacMan(Entity):
 #                 self.state = 'Seek pellets'
 
 #         elif self.state == 'Evade Ghosts':
-#             # Ms Pac-Man uses tree search to evade ghosts 
+#             # Ms Pac-Man uses tree search to evade ghosts
 #             # so that none is visible within a distance.
 #             print("Using tree search to evade ghosts...")
 #             if not conditions['ghost_in_sight']:
 #                 self.state = 'Seek pellets'
-                
+
 #         return self.state
 
 # # Example usage:

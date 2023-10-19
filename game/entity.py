@@ -126,7 +126,7 @@ class Entity(ABC):
         """
         self.position = self.node.position.copy()
 
-    def update(self, dt: float) -> None:
+    def update(self, game) -> None:
         """
         Updates the entity's position based on its current direction and speed,
         taking into account the elapsed time (dt).
@@ -134,11 +134,15 @@ class Entity(ABC):
         Checks if the entity has overshot its target node, and if so, updates
         the node and direction.
 
+        If the entity is at a portal, it updates the node to the portal's
+        destination node.
+
         Parameters
         ----------
         dt : float
             The elapsed time since the last update.
         """
+        dt = game.dt
         self.position += self.directions[self.direction] * self.speed * dt
 
         if self.overshotTarget():
@@ -149,6 +153,7 @@ class Entity(ABC):
                 if self.node.neighbors[PORTAL] is not None:
                     self.node = self.node.neighbors[PORTAL]
             self.target = self.getNewTarget(direction)
+
             if self.target is not self.node:
                 self.direction = direction
             else:
@@ -175,6 +180,18 @@ class Entity(ABC):
                 if self.node.neighbors[direction] is not None:
                     return True
         return False
+
+    def targets(self) -> list:
+        """
+        Returns a list of target nodes for the entity.
+
+        Returns
+        -------
+        list
+            A list of target nodes for the entity.
+        """
+        #! double check this
+        return [x for x in self.node.neighbors if x is not None]
 
     def getNewTarget(self, direction: int) -> "Node":
         """

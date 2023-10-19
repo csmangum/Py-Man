@@ -86,8 +86,10 @@ class GameController:
         Renders the game
     """
 
-    def __init__(self) -> None:
-        pygame.init()
+    def __init__(self, render_game: bool = True) -> None:
+        self.render_game = render_game
+        if render_game:
+            pygame.init()
         self.screen = pygame.display.set_mode(SCREENSIZE, 0, 32)
         self.background = None
         self.background_norm = None
@@ -199,14 +201,15 @@ class GameController:
         6. Game checks for events and renders the game.
         """
         dt = self.clock.tick(30) / 1000.0
+        self.dt = dt
         self.textgroup.update(dt)
         self.pellets.update(dt)
 
         # Update ghosts, fruit, and check for pellet events
         if not self.pause.paused:
-            self.ghosts.update(dt)
+            self.ghosts.update(self)
             if self.fruit is not None:
-                self.fruit.update(dt)
+                self.fruit.update(self)
             self.checkPelletEvents()
             self.checkGhostEvents()
             self.checkFruitEvents()
@@ -214,9 +217,9 @@ class GameController:
         # Play when pacman is alive and not paused
         if self.pacman.alive:
             if not self.pause.paused:
-                self.pacman.update(dt)
+                self.pacman.update(self)
         else:
-            self.pacman.update(dt)
+            self.pacman.update(self)
 
         # Flash background
         if self.flashBG:
@@ -235,7 +238,8 @@ class GameController:
 
         # Finish update and render
         self.checkEvents()
-        self.render()
+        if self.render_game:
+            self.render()
 
     def checkEvents(self) -> None:
         """
@@ -334,7 +338,6 @@ class GameController:
         if self.pellets.numEaten == 50 or self.pellets.numEaten == 140:
             if self.fruit is None:
                 self.fruit = Fruit(self.nodes.getNodeFromTiles(9, 20), self.level)
-                print(self.fruit)
         if self.fruit is not None:
             if self.pacman.collideCheck(self.fruit):
                 self.updateScore(self.fruit.points)

@@ -83,7 +83,7 @@ class Fruit(Entity):
         self.setBetweenNodes(RIGHT)
         self.sprites = FruitSprites(self, level)
 
-    def update(self, dt: int) -> None:
+    def update(self, game) -> None:
         """
         Updates the timer attribute by adding the elapsed time (dt).
 
@@ -95,6 +95,7 @@ class Fruit(Entity):
         dt : int
             The elapsed time since the last update.
         """
+        dt = game.dt
         self.timer += dt
         if self.timer >= self.lifespan:
             self.destroy = True

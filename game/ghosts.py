@@ -123,7 +123,7 @@ class Ghost(Entity):
         self.points = 200
         self.directionMethod = self.goalDirection
 
-    def update(self, dt: int) -> None:
+    def update(self, game) -> None:
         """
         Calls the update method of the parent class (Entity) to update the
         ghost's position.
@@ -142,13 +142,14 @@ class Ghost(Entity):
         dt : int
             The time increment.
         """
+        dt = game.dt
         self.sprites.update(dt)
         self.mode.update(dt)
         if self.mode.current is SCATTER:
             self.scatter()
         elif self.mode.current is CHASE:
             self.chase()
-        Entity.update(self, dt)
+        Entity.update(self, game)
 
     def scatter(self) -> None:
         """
@@ -368,7 +369,7 @@ class GhostGroup:
         """
         return iter(self.ghosts)
 
-    def update(self, dt: int) -> None:
+    def update(self, game) -> None:
         """
         Calls the update method for each ghost entity in the group, effectively
         updating their positions and behavior based on elapsed time (dt).
@@ -379,7 +380,7 @@ class GhostGroup:
             The time increment.
         """
         for ghost in self:
-            ghost.update(dt)
+            ghost.update(game)
 
     def startFreight(self) -> None:
         """
