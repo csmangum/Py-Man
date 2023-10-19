@@ -32,7 +32,7 @@ class Entity(ABC):
         The color of the entity.
     visible : bool
         Whether or not the entity is visible.
-    disablePortal : bool
+    disable_portal : bool
         Whether or not the entity can use portals.
     goal : Vector2
         The goal position of the entity.
@@ -51,36 +51,36 @@ class Entity(ABC):
 
     Methods
     -------
-    setPosition()
+    set_position()
         Sets the entity's position based on its current node's position.
     update(dt)
         Updates the entity's position based on its current direction and speed,
         taking into account the elapsed time (dt).
-    validDirection(direction)
+    valid_direction(direction)
         Checks if the entity can move in the given direction.
-    getNewTarget(direction)
+    get_new_target(direction)
         Gets the new target node for the entity, based on the given direction.
-    overshotTarget()
+    over_shot_target()
         Checks if the entity has overshot its target node.
-    reverseDirection()
+    reverse_direction()
         Reverses the entity's direction.
-    oppositeDirection(direction)
+    opposite_direction(direction)
         Checks if the given direction is the opposite of the entity's current
         direction.
-    validDirections()
+    valid_directions()
         Gets a list of valid directions for the entity.
-    randomDirection(directions)
+    random_direction(directions)
         Gets a random direction from the given list of directions.
-    goalDirection(directions)
+    goal_direction(directions)
         Gets the direction that is closest to the entity's goal.
-    setStartNode(node)
+    set_start_node(node)
         Sets the entity's starting node.
-    setBetweenNodes(direction)
+    set_between_nodes(direction)
         Sets the entity's position between its current node and the node in the
         given direction.
     reset()
         Resets the entity.
-    setSpeed(speed)
+    set_speed(speed)
         Sets the entity's speed.
     render(screen)
         Renders the entity.
@@ -109,18 +109,18 @@ class Entity(ABC):
             STOP: Vector2(),
         }
         self.direction = STOP
-        self.setSpeed(100)
+        self.set_speed(100)
         self.radius = 10
         self.collideRadius = 5
         self.color = WHITE
         self.visible = True
-        self.disablePortal = False
+        self.disable_portal = False
         self.goal = None
-        self.directionMethod = self.randomDirection
-        self.setStartNode(node)
+        self.directionMethod = self.random_direction
+        self.set_start_node(node)
         self.image = None
 
-    def setPosition(self) -> None:
+    def set_position(self) -> None:
         """
         Sets the entity's position based on its current node's position.
         """
@@ -145,23 +145,23 @@ class Entity(ABC):
         dt = game.dt
         self.position += self.directions[self.direction] * self.speed * dt
 
-        if self.overshotTarget():
+        if self.over_shot_target():
             self.node = self.target
-            directions = self.validDirections()
+            directions = self.valid_directions()
             direction = self.directionMethod(directions)
-            if not self.disablePortal:
+            if not self.disable_portal:
                 if self.node.neighbors[PORTAL] is not None:
                     self.node = self.node.neighbors[PORTAL]
-            self.target = self.getNewTarget(direction)
+            self.target = self.get_new_target(direction)
 
             if self.target is not self.node:
                 self.direction = direction
             else:
-                self.target = self.getNewTarget(self.direction)
+                self.target = self.get_new_target(self.direction)
 
-            self.setPosition()
+            self.set_position()
 
-    def validDirection(self, direction: int) -> bool:
+    def valid_direction(self, direction: int) -> bool:
         """
         Checks if the entity can move in the given direction.
 
@@ -193,7 +193,7 @@ class Entity(ABC):
         #! double check this
         return [x for x in self.node.neighbors if x is not None]
 
-    def getNewTarget(self, direction: int) -> "Node":
+    def get_new_target(self, direction: int) -> "Node":
         """
         Gets the new target node for the entity, based on the given direction.
 
@@ -210,11 +210,11 @@ class Entity(ABC):
         Node
             The new target node for the entity.
         """
-        if self.validDirection(direction):
+        if self.valid_direction(direction):
             return self.node.neighbors[direction]
         return self.node
 
-    def overshotTarget(self) -> bool:
+    def over_shot_target(self) -> bool:
         """
         Checks if the entity has overshot its target node.
 
@@ -226,12 +226,12 @@ class Entity(ABC):
         if self.target is not None:
             vec1 = self.target.position - self.node.position
             vec2 = self.position - self.node.position
-            node2Target = vec1.magnitudeSquared()
-            node2Self = vec2.magnitudeSquared()
+            node2Target = vec1.magnitude_squared()
+            node2Self = vec2.magnitude_squared()
             return node2Self >= node2Target
         return False
 
-    def reverseDirection(self) -> None:
+    def reverse_direction(self) -> None:
         """
         Reverses the entity's direction.
         """
@@ -240,7 +240,7 @@ class Entity(ABC):
         self.node = self.target
         self.target = temp
 
-    def oppositeDirection(self, direction: int) -> bool:
+    def opposite_direction(self, direction: int) -> bool:
         """
         Checks if the given direction is the opposite of the entity's current
         direction.
@@ -261,7 +261,7 @@ class Entity(ABC):
                 return True
         return False
 
-    def validDirections(self) -> list:
+    def valid_directions(self) -> list:
         """
         Gets a list of valid directions for the entity.
 
@@ -278,14 +278,14 @@ class Entity(ABC):
         """
         directions = []
         for key in [UP, DOWN, LEFT, RIGHT]:
-            if self.validDirection(key):
+            if self.valid_direction(key):
                 if key != self.direction * -1:
                     directions.append(key)
         if len(directions) == 0:
             directions.append(self.direction * -1)
         return directions
 
-    def randomDirection(self, directions: list) -> int:
+    def random_direction(self, directions: list) -> int:
         """
         Gets a random direction from the given list of directions.
 
@@ -301,7 +301,7 @@ class Entity(ABC):
         """
         return directions[randint(0, len(directions) - 1)]
 
-    def goalDirection(self, directions: list) -> int:
+    def goal_direction(self, directions: list) -> int:
         """
         Gets the direction that is closest to the entity's goal.
 
@@ -320,11 +320,11 @@ class Entity(ABC):
             vec = (
                 self.node.position + self.directions[direction] * TILEWIDTH - self.goal
             )
-            distances.append(vec.magnitudeSquared())
+            distances.append(vec.magnitude_squared())
         index = distances.index(min(distances))
         return directions[index]
 
-    def setStartNode(self, node: "Node") -> None:
+    def set_start_node(self, node: "Node") -> None:
         """
         Sets the entity's starting node.
 
@@ -336,9 +336,9 @@ class Entity(ABC):
         self.node = node
         self.startNode = node
         self.target = node
-        self.setPosition()
+        self.set_position()
 
-    def setBetweenNodes(self, direction: int) -> None:
+    def set_between_nodes(self, direction: int) -> None:
         """
         Sets the entity's position between its current node and the node in the
         given direction.
@@ -357,12 +357,12 @@ class Entity(ABC):
         Resets the entity's state to its initial state, including its starting
         node, direction, speed, and visibility.
         """
-        self.setStartNode(self.startNode)
+        self.set_start_node(self.startNode)
         self.direction = STOP
         self.speed = 100
         self.visible = True
 
-    def setSpeed(self, speed: float) -> None:
+    def set_speed(self, speed: float) -> None:
         """
         Sets the entity's speed based on a given value.
 
@@ -389,7 +389,7 @@ class Entity(ABC):
             if self.image is not None:
                 adjust = Vector2(TILEWIDTH, TILEHEIGHT) / 2
                 p = self.position - adjust
-                screen.blit(self.image, p.asTuple())
+                screen.blit(self.image, p.as_tuple())
             else:
-                p = self.position.asInt()
+                p = self.position.as_int()
                 pygame.draw.circle(screen, self.color, p, self.radius)

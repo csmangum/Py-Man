@@ -42,13 +42,13 @@ class PacMan(Entity):
         Kills the entity
     update(dt)
         Updates the entity
-    getValidKey()
+    get_valid_key()
         Gets the key pressed by the player
-    eatPellets(pelletList)
+    eat_pellets(pelletList)
         Checks if the entity has eaten a pellet
-    collideGhost(ghost)
+    collide_ghost(ghost)
         Checks if the entity has collided with a ghost
-    collideCheck(other)
+    collide_check(other)
         Checks if the entity has collided with another entity
     """
 
@@ -57,7 +57,7 @@ class PacMan(Entity):
         self.name = PACMAN
         self.color = YELLOW
         self.direction = LEFT
-        self.setBetweenNodes(LEFT)  # PacMan starts between nodes 1 and 2
+        self.set_between_nodes(LEFT)  # PacMan starts between nodes 1 and 2
         self.alive = True
         self.sprites = PacManSprites(self)
 
@@ -68,9 +68,9 @@ class PacMan(Entity):
         """
         Entity.reset(self)
         self.direction = LEFT
-        self.setBetweenNodes(LEFT)
+        self.set_between_nodes(LEFT)
         self.alive = True
-        self.image = self.sprites.getStartImage()
+        self.image = self.sprites.get_start_image()
         self.sprites.reset()
 
     def die(self) -> None:
@@ -96,29 +96,29 @@ class PacMan(Entity):
         dt = game.dt
         self.sprites.update(dt)
         self.position += self.directions[self.direction] * self.speed * dt
-        direction = self.getValidKey()
+        direction = self.get_valid_key()
 
-        if self.overshotTarget():
+        if self.over_shot_target():
             self.node = self.target
             if self.node.neighbors[PORTAL] is not None:
                 self.node = self.node.neighbors[PORTAL]
-            self.target = self.getNewTarget(direction)
+            self.target = self.get_new_target(direction)
             if self.target is not self.node:
                 self.direction = direction
             else:
-                self.target = self.getNewTarget(self.direction)
+                self.target = self.get_new_target(self.direction)
 
             if self.target is self.node:
                 self.direction = STOP
-            self.setPosition()
+            self.set_position()
         else:
-            if self.oppositeDirection(direction):
-                self.reverseDirection()
+            if self.opposite_direction(direction):
+                self.reverse_direction()
         # print(
         #     f"pacman position: {self.position}, pacman direction: {self.direction}, pacman target: {self.target.position}"
         # )
 
-    def getValidKey(self) -> str:
+    def get_valid_key(self) -> str:
         """
         Checks for keyboard inputs and returns the direction corresponding to
         the key pressed.
@@ -141,7 +141,7 @@ class PacMan(Entity):
             return RIGHT
         return STOP
 
-    def eatPellets(self, pelletList: list) -> Union[None, object]:
+    def eat_pellets(self, pelletList: list) -> Union[None, object]:
         """
         Checks for collisions between Pac-Man and any pellet in the provided list.
 
@@ -158,11 +158,11 @@ class PacMan(Entity):
             The pellet that was "eaten" if a collision is detected, None otherwise
         """
         for pellet in pelletList:
-            if self.collideCheck(pellet):
+            if self.collide_check(pellet):
                 return pellet
         return None
 
-    def collideGhost(self, ghost: "Ghost") -> bool:
+    def collide_ghost(self, ghost: "Ghost") -> bool:
         """
         Checks if Pac-Man has collided with a ghost.
 
@@ -178,9 +178,9 @@ class PacMan(Entity):
         bool
             True if a collision is detected, False otherwise
         """
-        return self.collideCheck(ghost)
+        return self.collide_check(ghost)
 
-    def collideCheck(self, other: "object") -> bool:
+    def collide_check(self, other: "object") -> bool:
         """
         A general collision detection method that checks if Pac-Man has collided
         with another entity (like a ghost or pellet).
@@ -201,74 +201,8 @@ class PacMan(Entity):
             True if a collision is detected, False otherwise
         """
         d = self.position - other.position
-        dSquared = d.magnitudeSquared()
+        dSquared = d.magnitude_squared()
         rSquared = (self.collideRadius + other.collideRadius) ** 2
         if dSquared <= rSquared:
             return True
         return False
-
-
-# class StateMachine:
-#     def __init__(self):
-#         self.state = 'Seek pellets'
-
-#     def update(self, conditions):
-
-#         self.sprites.update(dt)
-#         self.position += self.directions[self.direction] * self.speed * dt
-#         direction = self.getValidKey()
-
-#         if self.state == 'Seek pellets':
-#             # Ms Pac-Man moves randomly until it detects a pellet
-#             # and then uses a pathfinding algorithm to eat the pellets.
-#             # For simplicity, we will just print a statement here.
-
-#             if conditions['pellet_detected']:
-#                 print("Pellet detected! Following pathfinding algorithm...")
-
-#             if conditions['ghost_in_sight']:
-#                 self.state = 'Evade Ghosts'
-#             elif conditions['power_pill_eaten']:
-#                 self.state = 'Chase Ghosts'
-
-#         elif self.state == 'Chase Ghosts':
-#             # Ms Pac-Man uses a tree-search algorithm to chase the blue ghosts.
-#             print("Using tree-search algorithm to chase blue ghosts...")
-#             if conditions['ghosts_flashing']:
-#                 self.state = 'Evade Ghosts'
-#             elif not conditions['visible_ghost']:
-#                 self.state = 'Seek pellets'
-
-#         elif self.state == 'Evade Ghosts':
-#             # Ms Pac-Man uses tree search to evade ghosts
-#             # so that none is visible within a distance.
-#             print("Using tree search to evade ghosts...")
-#             if not conditions['ghost_in_sight']:
-#                 self.state = 'Seek pellets'
-
-#         return self.state
-
-# # Example usage:
-
-# sm = StateMachine()
-
-# # Conditions are represented as a dictionary
-# conditions = {
-#     'ghost_in_sight': False,
-#     'power_pill_eaten': False,
-#     'ghosts_flashing': False,
-#     'visible_ghost': False,
-#     'pellet_detected': False
-# }
-
-# print(sm.update(conditions))  # Output: Seek pellets behavior and then the state
-
-# conditions['ghost_in_sight'] = True
-# print(sm.update(conditions))  # Output: Evade ghosts behavior and then the state
-
-# conditions['ghost_in_sight'] = False
-# conditions['pellet_detected'] = True
-# print(sm.update(conditions))  # Output: Seek pellets behavior (with pathfinding) and then the state
-
-# conditions['power_pill_eaten'] = True
-# print(sm.update(conditions))  # Output: Chase ghosts behavior and then the state

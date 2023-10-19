@@ -122,10 +122,10 @@ class ModeController:
             on the MainMode object.
         If the current mode is SPAWN, it checks if the entity has reached its
             spawn node. If so, it switches the entity back to its normal mode.
-    setFreightMode()
+    set_freight_mode()
         Sets the mode to FREIGHT.
         If the entity is already in FREIGHT mode, it resets the timer.
-    setSpawnMode()
+    set_spawn_mode()
         Sets the mode to SPAWN if the current mode is FREIGHT.
     """
 
@@ -173,17 +173,17 @@ class ModeController:
             self.timer += dt
             if self.timer >= self.time:
                 self.time = None
-                self.entity.normalMode()
+                self.entity.normal_mode()
                 self.current = self.mainmode.mode
         elif self.current in [SCATTER, CHASE]:
             self.current = self.mainmode.mode
 
         if self.current is SPAWN:
             if self.entity.node == self.entity.spawnNode:
-                self.entity.normalMode()
+                self.entity.normal_mode()
                 self.current = self.mainmode.mode
 
-    def setFreightMode(self) -> None:
+    def set_freight_mode(self) -> None:
         """
         Sets the mode to FREIGHT.
 
@@ -196,7 +196,7 @@ class ModeController:
         elif self.current is FREIGHT:
             self.timer = 0
 
-    def setSpawnMode(self) -> None:
+    def set_spawn_mode(self) -> None:
         """
         Sets the mode to SPAWN if the current mode is FREIGHT.
         """

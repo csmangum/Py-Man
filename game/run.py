@@ -80,7 +80,7 @@ class GameController:
         Restarts the game
     resetLevel()
         Resets the current level
-    updateScore()
+    update_score()
         Updates the score
     render()
         Renders the game
@@ -118,10 +118,10 @@ class GameController:
         self.background_norm.fill(BLACK)
         self.background_flash = pygame.surface.Surface(SCREENSIZE).convert()
         self.background_flash.fill(BLACK)
-        self.background_norm = self.mazesprites.constructBackground(
+        self.background_norm = self.mazesprites.construct_background(
             self.background_norm, self.level % 5
         )
-        self.background_flash = self.mazesprites.constructBackground(
+        self.background_flash = self.mazesprites.construct_background(
             self.background_flash, 5
         )
         self.flashBG = False
@@ -146,42 +146,42 @@ class GameController:
         10. Set up the ghost home access
         11. Set up the ghost access
         """
-        self.mazedata.loadMaze(self.level)
+        self.mazedata.load_maze(self.level)
         self.mazesprites = MazeSprites(
             "assets/" + self.mazedata.obj.name + ".txt",
             "assets/" + self.mazedata.obj.name + "_rotation.txt",
         )
         self.setBackground()
         self.nodes = NodeGroup("assets/" + self.mazedata.obj.name + ".txt")
-        self.mazedata.obj.setPortalPairs(self.nodes)
-        self.mazedata.obj.connectHomeNodes(self.nodes)
+        self.mazedata.obj.set_portal_pairs(self.nodes)
+        self.mazedata.obj.connect_home_nodes(self.nodes)
         self.pacman = PacMan(
-            self.nodes.getNodeFromTiles(*self.mazedata.obj.pacmanStart)
+            self.nodes.get_node_from_tiles(*self.mazedata.obj.pacmanStart)
         )
         self.pellets = PelletGroup("assets/" + self.mazedata.obj.name + ".txt")
-        self.ghosts = GhostGroup(self.nodes.getStartTempNode(), self.pacman)
+        self.ghosts = GhostGroup(self.nodes.get_start_temp_node(), self.pacman)
 
-        self.ghosts.pinky.setStartNode(
-            self.nodes.getNodeFromTiles(*self.mazedata.obj.addOffset(2, 3))
+        self.ghosts.pinky.set_start_node(
+            self.nodes.get_node_from_tiles(*self.mazedata.obj.add_offset(2, 3))
         )
-        self.ghosts.inky.setStartNode(
-            self.nodes.getNodeFromTiles(*self.mazedata.obj.addOffset(0, 3))
+        self.ghosts.inky.set_start_node(
+            self.nodes.get_node_from_tiles(*self.mazedata.obj.add_offset(0, 3))
         )
-        self.ghosts.clyde.setStartNode(
-            self.nodes.getNodeFromTiles(*self.mazedata.obj.addOffset(4, 3))
+        self.ghosts.clyde.set_start_node(
+            self.nodes.get_node_from_tiles(*self.mazedata.obj.add_offset(4, 3))
         )
-        self.ghosts.setSpawnNode(
-            self.nodes.getNodeFromTiles(*self.mazedata.obj.addOffset(2, 3))
+        self.ghosts.set_spawn_node(
+            self.nodes.get_node_from_tiles(*self.mazedata.obj.add_offset(2, 3))
         )
-        self.ghosts.blinky.setStartNode(
-            self.nodes.getNodeFromTiles(*self.mazedata.obj.addOffset(2, 0))
+        self.ghosts.blinky.set_start_node(
+            self.nodes.get_node_from_tiles(*self.mazedata.obj.add_offset(2, 0))
         )
 
-        self.nodes.denyHomeAccess(self.pacman)
-        self.nodes.denyHomeAccessList(self.ghosts)
-        self.ghosts.inky.startNode.denyAccess(RIGHT, self.ghosts.inky)
-        self.ghosts.clyde.startNode.denyAccess(LEFT, self.ghosts.clyde)
-        self.mazedata.obj.denyGhostsAccess(self.ghosts, self.nodes)
+        self.nodes.deny_home_access(self.pacman)
+        self.nodes.deny_home_access_list(self.ghosts)
+        self.ghosts.inky.startNode.deny_access(RIGHT, self.ghosts.inky)
+        self.ghosts.clyde.startNode.deny_access(LEFT, self.ghosts.clyde)
+        self.mazedata.obj.deny_ghosts_access(self.ghosts, self.nodes)
 
     def update(self) -> None:
         """
@@ -254,12 +254,12 @@ class GameController:
             elif event.type == KEYDOWN:
                 if event.key == K_SPACE:
                     if self.pacman.alive:
-                        self.pause.setPause(playerPaused=True)
+                        self.pause.set_pause(playerPaused=True)
                         if not self.pause.paused:
-                            self.textgroup.hideText()
+                            self.textgroup.hide_text()
                             self.showEntities()
                         else:
-                            self.textgroup.showText(PAUSETXT)
+                            self.textgroup.show_text(PAUSETXT)
                             # self.hideEntities()
 
     def checkPelletEvents(self) -> None:
@@ -272,21 +272,21 @@ class GameController:
         If Pacman eats all the pellets, the background flashes and the game is
             paused for 3 seconds before starting the next level.
         """
-        pellet = self.pacman.eatPellets(self.pellets.pelletList)
+        pellet = self.pacman.eat_pellets(self.pellets.pelletList)
         if pellet:
             self.pellets.numEaten += 1
-            self.updateScore(pellet.points)
+            self.update_score(pellet.points)
             if self.pellets.numEaten == 30:
-                self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
+                self.ghosts.inky.startNode.allow_access(RIGHT, self.ghosts.inky)
             if self.pellets.numEaten == 70:
-                self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
+                self.ghosts.clyde.startNode.allow_access(LEFT, self.ghosts.clyde)
             self.pellets.pelletList.remove(pellet)
             if pellet.name == POWERPELLET:
-                self.ghosts.startFreight()
-            if self.pellets.isEmpty():
+                self.ghosts.start_freight()
+            if self.pellets.is_empty():
                 self.flashBG = True
                 self.hideEntities()
-                self.pause.setPause(pauseTime=3, func=self.nextLevel)
+                self.pause.set_pause(pauseTime=3, func=self.nextLevel)
 
     def checkGhostEvents(self) -> None:
         """
@@ -299,12 +299,12 @@ class GameController:
             game is paused for 3 seconds before restarting the level.
         """
         for ghost in self.ghosts:
-            if self.pacman.collideGhost(ghost):
+            if self.pacman.collide_ghost(ghost):
                 if ghost.mode.current is FREIGHT:
                     self.pacman.visible = False
                     ghost.visible = False
-                    self.updateScore(ghost.points)
-                    self.textgroup.addText(
+                    self.update_score(ghost.points)
+                    self.textgroup.add_text(
                         str(ghost.points),
                         WHITE,
                         ghost.position.x,
@@ -312,21 +312,21 @@ class GameController:
                         8,
                         time=1,
                     )
-                    self.ghosts.updatePoints()
-                    self.pause.setPause(pauseTime=1, func=self.showEntities)
-                    ghost.startSpawn()
-                    self.nodes.allowHomeAccess(ghost)
+                    self.ghosts.update_points()
+                    self.pause.set_pause(pauseTime=1, func=self.showEntities)
+                    ghost.start_spawn()
+                    self.nodes.allow_home_access(ghost)
                 elif ghost.mode.current is not SPAWN:
                     if self.pacman.alive:
                         self.lives -= 1
-                        self.lifesprites.removeImage()
+                        self.lifesprites.remove_image()
                         self.pacman.die()
                         self.ghosts.hide()
                         if self.lives <= 0:
-                            self.textgroup.showText(GAMEOVERTXT)
-                            self.pause.setPause(pauseTime=3, func=self.restartGame)
+                            self.textgroup.show_text(GAMEOVERTXT)
+                            self.pause.set_pause(pauseTime=3, func=self.restartGame)
                         else:
-                            self.pause.setPause(pauseTime=3, func=self.resetLevel)
+                            self.pause.set_pause(pauseTime=3, func=self.resetLevel)
 
     def checkFruitEvents(self) -> None:
         """
@@ -337,11 +337,11 @@ class GameController:
         """
         if self.pellets.numEaten == 50 or self.pellets.numEaten == 140:
             if self.fruit is None:
-                self.fruit = Fruit(self.nodes.getNodeFromTiles(9, 20), self.level)
+                self.fruit = Fruit(self.nodes.get_node_from_tiles(9, 20), self.level)
         if self.fruit is not None:
-            if self.pacman.collideCheck(self.fruit):
-                self.updateScore(self.fruit.points)
-                self.textgroup.addText(
+            if self.pacman.collide_check(self.fruit):
+                self.update_score(self.fruit.points)
+                self.textgroup.add_text(
                     str(self.fruit.points),
                     WHITE,
                     self.fruit.position.x,
@@ -382,7 +382,7 @@ class GameController:
         self.level += 1
         self.pause.paused = True
         self.startGame()
-        self.textgroup.updateLevel(self.level)
+        self.textgroup.update_level(self.level)
 
     def restartGame(self) -> None:
         """
@@ -394,10 +394,10 @@ class GameController:
         self.fruit = None
         self.startGame()
         self.score = 0
-        self.textgroup.updateScore(self.score)
-        self.textgroup.updateLevel(self.level)
-        self.textgroup.showText(READYTXT)
-        self.lifesprites.resetLives(self.lives)
+        self.textgroup.update_score(self.score)
+        self.textgroup.update_level(self.level)
+        self.textgroup.show_text(READYTXT)
+        self.lifesprites.reset_lives(self.lives)
         self.fruitCaptured = []
 
     def resetLevel(self) -> None:
@@ -408,9 +408,9 @@ class GameController:
         self.pacman.reset()
         self.ghosts.reset()
         self.fruit = None
-        self.textgroup.showText(READYTXT)
+        self.textgroup.show_text(READYTXT)
 
-    def updateScore(self, points: int) -> None:
+    def update_score(self, points: int) -> None:
         """
         Updates the player's score.
 
@@ -420,7 +420,7 @@ class GameController:
             The amount of points to add to the score
         """
         self.score += points
-        self.textgroup.updateScore(self.score)
+        self.textgroup.update_score(self.score)
 
     def render(self) -> None:
         """

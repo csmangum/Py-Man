@@ -61,7 +61,7 @@ class Fruit(Entity):
 
         Calculates the points attribute based on the provided level.
 
-        Calls the setBetweenNodes method with the RIGHT direction, presumably
+        Calls the set_between_nodes method with the RIGHT direction, presumably
         positioning the fruit accordingly.
 
         Creates a FruitSprites object and assigns it to the sprites attribute.
@@ -80,7 +80,7 @@ class Fruit(Entity):
         self.timer = 0
         self.destroy = False
         self.points = 100 + level * 20
-        self.setBetweenNodes(RIGHT)
+        self.set_between_nodes(RIGHT)
         self.sprites = FruitSprites(self, level)
 
     def update(self, game) -> None:

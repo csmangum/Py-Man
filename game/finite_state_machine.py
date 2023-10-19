@@ -106,7 +106,7 @@ class PacManFSM(PacMan):
         elif self.pellet_nearby():
             next_direction = self.move_towards_nearest_pellet()
         else:
-            valid_directions = self.validDirections()
+            valid_directions = self.valid_directions()
             next_direction = random.choice(valid_directions)
 
         return next_direction

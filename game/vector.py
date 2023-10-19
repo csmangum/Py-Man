@@ -34,15 +34,15 @@ class Vector2:
     __eq__(other)
         Checks if two vectors are approximately equal by comparing their x and
         y components within a threshold.
-    magnitudeSquared()
+    magnitude_squared()
         Returns the squared magnitude of the vector.
     magnitude()
         Returns the magnitude of the vector.
     copy()
         Returns a copy of the vector.
-    asTuple()
+    as_tuple()
         Returns the vector as a tuple.
-    asInt()
+    as_int()
         Returns the vector's components as integers. Useful for pixel-based
         operations in graphics.
     __str__()
@@ -179,7 +179,7 @@ class Vector2:
                 return True
         return False
 
-    def magnitudeSquared(self) -> int:
+    def magnitude_squared(self) -> int:
         """
         Returns the squared magnitude of the vector.
 
@@ -199,7 +199,7 @@ class Vector2:
         float
             Magnitude of the vector
         """
-        return math.sqrt(self.magnitudeSquared())
+        return math.sqrt(self.magnitude_squared())
 
     def copy(self) -> "Vector2":
         """
@@ -212,7 +212,7 @@ class Vector2:
         """
         return Vector2(self.x, self.y)
 
-    def asTuple(self) -> tuple:
+    def as_tuple(self) -> tuple:
         """
         Returns the vector as a tuple.
 
@@ -223,7 +223,7 @@ class Vector2:
         """
         return self.x, self.y
 
-    def asInt(self) -> tuple:
+    def as_int(self) -> tuple:
         """
         Returns the vector's components as integers. Useful for pixel-based
         operations in graphics.

@@ -81,7 +81,7 @@ class Pellet(ABC):
         if self.visible:
             adjust = Vector2(TILEWIDTH, TILEHEIGHT) / 2
             p = self.position + adjust
-            pygame.draw.circle(screen, self.color, p.asInt(), self.radius)
+            pygame.draw.circle(screen, self.color, p.as_int(), self.radius)
 
 
 class PowerPellet(Pellet):
@@ -193,12 +193,12 @@ class PelletGroup:
     update(dt)
         Updates all power pellets in the powerpellets list. This is mainly to
         handle the flashing effect of power pellets.
-    createPelletList(pelletfile)
+    create_pellet_list(pelletfile)
         Reads the pellet file and creates Pellet or PowerPellet objects based
         on the file's content.
-    readPelletfile(textfile)
+    read_pellet_file(textfile)
         Reads the pellet layout from a file and returns it as a NumPy array.
-    isEmpty()
+    is_empty()
         Checks if the pelletList is empty, i.e., all pellets have been eaten.
     render(screen)
         Renders all pellets in the pelletList on the provided screen (or surface).
@@ -211,7 +211,7 @@ class PelletGroup:
 
         Initializes the powerpellets list to store only power pellets.
 
-        Calls the createPelletList method to populate the pelletList based on the
+        Calls the create_pellet_list method to populate the pelletList based on the
         provided pellet file.
 
         Initializes a counter (numEaten) to track the number of pellets eaten.
@@ -223,7 +223,7 @@ class PelletGroup:
         """
         self.pelletList = []
         self.powerpellets = []
-        self.createPelletList(pelletfile)
+        self.create_pellet_list(pelletfile)
         self.numEaten = 0
 
     def update(self, dt: float) -> None:
@@ -240,7 +240,7 @@ class PelletGroup:
         for powerpellet in self.powerpellets:
             powerpellet.update(dt)
 
-    def createPelletList(self, pelletfile: str) -> None:
+    def create_pellet_list(self, pelletfile: str) -> None:
         """
         Reads the pellet file and creates Pellet or PowerPellet objects based
         on the file's content.
@@ -253,7 +253,7 @@ class PelletGroup:
         pelletfile : str
             Path to the pellet file
         """
-        data = self.readPelletfile(pelletfile)
+        data = self.read_pellet_file(pelletfile)
         for row in range(data.shape[0]):
             for col in range(data.shape[1]):
                 if data[row][col] in [".", "+"]:
@@ -263,7 +263,7 @@ class PelletGroup:
                     self.pelletList.append(pp)
                     self.powerpellets.append(pp)
 
-    def readPelletfile(self, textfile: str) -> np.ndarray:
+    def read_pellet_file(self, textfile: str) -> np.ndarray:
         """
         Reads the pellet layout from a file and returns it as a NumPy array.
 
@@ -279,7 +279,7 @@ class PelletGroup:
         """
         return np.loadtxt(textfile, dtype="<U1")
 
-    def isEmpty(self) -> bool:
+    def is_empty(self) -> bool:
         """
         Checks if the pelletList is empty, i.e., all pellets have been eaten.
 

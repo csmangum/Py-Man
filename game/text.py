@@ -38,12 +38,12 @@ class Text(ABC):
 
     Methods
     -------
-    setupFont(fontpath: str) -> None
+    setup_font(fontpath: str) -> None
         Initializes the font for rendering the text using a specified font
         path and size.
-    createLabel() -> None
+    create_label() -> None
         Renders the text content into a label using the specified font and color.
-    setText(newtext: str) -> None
+    set_text(newtext: str) -> None
         Updates the text content and recreates the label.
     update(dt: float) -> None
         If the text object has a lifespan, this method updates a timer based on
@@ -75,10 +75,10 @@ class Text(ABC):
         The destroy attribute is a flag that indicates whether the text object
         should be destroyed (removed from the game).
 
-        Sets up the font for rendering the text using the setupFont method.
+        Sets up the font for rendering the text using the setup_font method.
 
         Creates a label (a rendered version of the text) using the
-        createLabel method.
+        create_label method.
 
         Parameters
         ----------
@@ -109,10 +109,10 @@ class Text(ABC):
         self.lifespan = time
         self.label = None
         self.destroy = False
-        self.setupFont("assets/PressStart2P-Regular.ttf")
-        self.createLabel()
+        self.setup_font("assets/PressStart2P-Regular.ttf")
+        self.create_label()
 
-    def setupFont(self, fontpath: str) -> None:
+    def setup_font(self, fontpath: str) -> None:
         """
         Initializes the font for rendering the text using a specified font
         path and size.
@@ -124,13 +124,13 @@ class Text(ABC):
         """
         self.font = pygame.font.Font(fontpath, self.size)
 
-    def createLabel(self) -> None:
+    def create_label(self) -> None:
         """
         Renders the text content into a label using the specified font and color.
         """
         self.label = self.font.render(self.text, 1, self.color)
 
-    def setText(self, newtext: str) -> None:
+    def set_text(self, newtext: str) -> None:
         """
         Updates the text content and recreates the label.
 
@@ -140,7 +140,7 @@ class Text(ABC):
             The new text content.
         """
         self.text = str(newtext)
-        self.createLabel()
+        self.create_label()
 
     def update(self, dt: float) -> None:
         """
@@ -172,7 +172,7 @@ class Text(ABC):
             The surface to render the text label onto.
         """
         if self.visible:
-            x, y = self.position.asTuple()
+            x, y = self.position.as_tuple()
             screen.blit(self.label, (x, y))
 
 
@@ -185,16 +185,16 @@ class TextGroup(ABC):
 
         Initializes an empty dictionary alltext to store all the text elements.
 
-        Sets up predefined text elements using the setupText method.
+        Sets up predefined text elements using the setup_text method.
 
         Shows the "READY!" text by default.
         """
         self.nextid = 10
         self.alltext = {}
-        self.setupText()
-        self.showText(READYTXT)
+        self.setup_text()
+        self.show_text(READYTXT)
 
-    def addText(
+    def add_text(
         self,
         text: str,
         color: tuple,
@@ -234,10 +234,10 @@ class TextGroup(ABC):
         self.alltext[self.nextid] = Text(text, color, x, y, size, time=time, id=id)
         return self.nextid
 
-    def removeText(self, id):
+    def remove_text(self, id):
         self.alltext.pop(id)
 
-    def setupText(self):
+    def setup_text(self):
         size = TILEHEIGHT
         self.alltext[SCORETXT] = Text("0".zfill(8), WHITE, 0, TILEHEIGHT, size)
         self.alltext[LEVELTXT] = Text(
@@ -252,33 +252,33 @@ class TextGroup(ABC):
         self.alltext[GAMEOVERTXT] = Text(
             "GAMEOVER!", YELLOW, 10 * TILEWIDTH, 20 * TILEHEIGHT, size, visible=False
         )
-        self.addText("SCORE", WHITE, 0, 0, size)
-        self.addText("LEVEL", WHITE, 23 * TILEWIDTH, 0, size)
+        self.add_text("SCORE", WHITE, 0, 0, size)
+        self.add_text("LEVEL", WHITE, 23 * TILEWIDTH, 0, size)
 
     def update(self, dt):
         for tkey in list(self.alltext.keys()):
             self.alltext[tkey].update(dt)
             if self.alltext[tkey].destroy:
-                self.removeText(tkey)
+                self.remove_text(tkey)
 
-    def showText(self, id):
-        self.hideText()
+    def show_text(self, id):
+        self.hide_text()
         self.alltext[id].visible = True
 
-    def hideText(self):
+    def hide_text(self):
         self.alltext[READYTXT].visible = False
         self.alltext[PAUSETXT].visible = False
         self.alltext[GAMEOVERTXT].visible = False
 
-    def updateScore(self, score):
-        self.updateText(SCORETXT, str(score).zfill(8))
+    def update_score(self, score):
+        self.update_text(SCORETXT, str(score).zfill(8))
 
-    def updateLevel(self, level):
-        self.updateText(LEVELTXT, str(level + 1).zfill(3))
+    def update_level(self, level):
+        self.update_text(LEVELTXT, str(level + 1).zfill(3))
 
-    def updateText(self, id, value):
+    def update_text(self, id, value):
         if id in self.alltext.keys():
-            self.alltext[id].setText(value)
+            self.alltext[id].set_text(value)
 
     def render(self, screen):
         for tkey in list(self.alltext.keys()):

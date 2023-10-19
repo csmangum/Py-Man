@@ -61,18 +61,18 @@ class Ghost(Entity):
         Sets the goal attribute to the position of the player character.
     spawn()
         Sets the goal attribute to the position of the spawn node.
-    setSpawnNode(node)
+    set_spawn_node(node)
         Sets the spawnNode attribute to the provided node.
-    startSpawn()
+    start_spawn()
         Sets the mode to spawn mode.
         If the current mode is spawn, it sets the speed to 150, sets the
-        directionMethod to goalDirection, and calls the spawn method.
-    startFreight()
+        directionMethod to goal_direction, and calls the spawn method.
+    start_freight()
         Sets the mode to freight mode.
         If the current mode is freight, it sets the speed to 50 and sets the
-        directionMethod to randomDirection.
-    normalMode()
-        Sets the speed to 100 and sets the directionMethod to goalDirection.
+        directionMethod to random_direction.
+    normal_mode()
+        Sets the speed to 100 and sets the directionMethod to goal_direction.
     """
 
     def __init__(self, node, pacman=None, blinky=None) -> None:
@@ -86,7 +86,7 @@ class Ghost(Entity):
 
         Initializes the goal attribute as a Vector2 object.
 
-        Sets the directionMethod to the goalDirection method.
+        Sets the directionMethod to the goal_direction method.
 
         Takes two optional parameters, pacman and blinky, which seem to represent
         other game entities (likely the player character and another ghost).
@@ -106,7 +106,7 @@ class Ghost(Entity):
         self.name = GHOST
         self.points = 200
         self.goal = Vector2()
-        self.directionMethod = self.goalDirection
+        self.directionMethod = self.goal_direction
         self.pacman = pacman
         self.mode = ModeController(self)
         self.blinky = blinky
@@ -121,7 +121,7 @@ class Ghost(Entity):
         """
         Entity.reset(self)
         self.points = 200
-        self.directionMethod = self.goalDirection
+        self.directionMethod = self.goal_direction
 
     def update(self, game) -> None:
         """
@@ -170,7 +170,7 @@ class Ghost(Entity):
         """
         self.goal = self.spawnNode.position
 
-    def setSpawnNode(self, node: "Node") -> None:
+    def set_spawn_node(self, node: "Node") -> None:
         """
         Sets the spawnNode attribute to a specific node where the ghost
         should spawn.
@@ -182,41 +182,41 @@ class Ghost(Entity):
         """
         self.spawnNode = node
 
-    def startSpawn(self) -> None:
+    def start_spawn(self) -> None:
         """
-        Sets the ghost's mode to spawn mode using the mode.setSpawnMode() method.
+        Sets the ghost's mode to spawn mode using the mode.set_spawn_mode() method.
 
         If the current mode is spawn mode, it sets the ghost's speed,
         direction method, and goal to appropriate values for spawning.
         """
-        self.mode.setSpawnMode()
+        self.mode.set_spawn_mode()
         if self.mode.current == SPAWN:
-            self.setSpeed(150)
-            self.directionMethod = self.goalDirection
+            self.set_speed(150)
+            self.directionMethod = self.goal_direction
             self.spawn()
 
-    def startFreight(self) -> None:
+    def start_freight(self) -> None:
         """
-        Sets the ghost's mode to freight mode using the mode.setFreightMode() method.
+        Sets the ghost's mode to freight mode using the mode.set_freight_mode() method.
 
         If the current mode is freight mode, it sets the ghost's speed and direction
         method for freight mode behavior.
         """
-        self.mode.setFreightMode()
+        self.mode.set_freight_mode()
         if self.mode.current == FREIGHT:
-            self.setSpeed(50)
-            self.directionMethod = self.randomDirection
+            self.set_speed(50)
+            self.directionMethod = self.random_direction
 
-    def normalMode(self) -> None:
+    def normal_mode(self) -> None:
         """
         Resets the ghost to normal mode, setting its speed and direction method
         accordingly.
 
         It also denies access to a particular direction at the home node.
         """
-        self.setSpeed(100)
-        self.directionMethod = self.goalDirection
-        self.homeNode.denyAccess(DOWN, self)
+        self.set_speed(100)
+        self.directionMethod = self.goal_direction
+        self.homeNode.deny_access(DOWN, self)
 
 
 class Blinky(Ghost):
@@ -283,7 +283,7 @@ class Clyde(Ghost):
 
     def chase(self):
         d = self.pacman.position - self.position
-        ds = d.magnitudeSquared()
+        ds = d.magnitude_squared()
         if ds <= (TILEWIDTH * 8) ** 2:
             self.scatter()
         else:
@@ -320,13 +320,13 @@ class GhostGroup:
     update(dt)
         Calls the update method for each ghost entity in the group, effectively
         updating their positions and behavior based on elapsed time (dt).
-    startFreight()
+    start_freight()
         Initiates freight mode for all the ghost entities in the group by
-        calling the startFreight method on each ghost.
-    setSpawnNode(node)
+        calling the start_freight method on each ghost.
+    set_spawn_node(node)
         Sets the spawn node for all ghost entities in the group by calling
-        the setSpawnNode method on each ghost.
-    updatePoints()
+        the set_spawn_node method on each ghost.
+    update_points()
         Updates the points attribute for all ghost entities by doubling
         their current points.
     resetPoints()
@@ -382,19 +382,19 @@ class GhostGroup:
         for ghost in self:
             ghost.update(game)
 
-    def startFreight(self) -> None:
+    def start_freight(self) -> None:
         """
         Initiates freight mode for all the ghost entities in the group by
-        calling the startFreight method on each ghost.
+        calling the start_freight method on each ghost.
         """
         for ghost in self:
-            ghost.startFreight()
+            ghost.start_freight()
         self.resetPoints()
 
-    def setSpawnNode(self, node: "Node") -> None:
+    def set_spawn_node(self, node: "Node") -> None:
         """
         Sets the spawn node for all ghost entities in the group by calling
-        the setSpawnNode method on each ghost.
+        the set_spawn_node method on each ghost.
 
         Parameters
         ----------
@@ -402,9 +402,9 @@ class GhostGroup:
             The node that the ghosts should spawn at.
         """
         for ghost in self:
-            ghost.setSpawnNode(node)
+            ghost.set_spawn_node(node)
 
-    def updatePoints(self) -> None:
+    def update_points(self) -> None:
         """
         Updates the points attribute for all ghost entities by doubling
         their current points.

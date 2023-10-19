@@ -24,7 +24,7 @@ class Pause:
         returns the callback function (func). This allows the game to execute a
         specific action after the pause duration is over. If the pause duration
         is not reached or not set, it returns None.
-    setPause(playerPaused, pauseTime, func)
+    set_pause(playerPaused, pauseTime, func)
         Sets the pause state with the provided arguments.
     flip()
         Toggles the pause state (paused attribute).
@@ -79,7 +79,7 @@ class Pause:
                 return self.func
         return None
 
-    def setPause(self, playerPaused: bool = False, pauseTime=None, func=None) -> None:
+    def set_pause(self, playerPaused: bool = False, pauseTime=None, func=None) -> None:
         """
         Sets the pause state with the provided arguments.
 

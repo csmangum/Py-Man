@@ -35,13 +35,13 @@ class MazeBase(ABC):
 
     Methods
     -------
-    setPortalPairs(nodes)
+    set_portal_pairs(nodes)
         Sets the portal pairs in the nodes object.
-    connectHomeNodes(nodes)
+    connect_home_nodes(nodes)
         Connects the home nodes in the nodes object.
-    addOffset(x, y)
+    add_offset(x, y)
         Adds the home offset to the given coordinates.
-    denyGhostsAccess(ghosts, nodes)
+    deny_ghosts_access(ghosts, nodes)
         Denies the ghosts access to the home nodes.
     """
 
@@ -50,7 +50,7 @@ class MazeBase(ABC):
         self.homeoffset = (0, 0)
         self.ghostNodeDeny = {UP: (), DOWN: (), LEFT: (), RIGHT: ()}
 
-    def setPortalPairs(self, nodes: "Node") -> None:
+    def set_portal_pairs(self, nodes: "Node") -> None:
         """
         Takes a nodes argument and sets the portal pairs in the nodes object.
 
@@ -63,15 +63,15 @@ class MazeBase(ABC):
             The nodes object to set the portal pairs in.
         """
         for pair in list(self.portalPairs.values()):
-            nodes.setPortalPair(*pair)
+            nodes.set_portal_pair(*pair)
 
-    def connectHomeNodes(self, nodes: "Node") -> None:
+    def connect_home_nodes(self, nodes: "Node") -> None:
         """
         Creates home nodes with an offset specified by homeoffset using the
-        createHomeNodes method of the nodes object.
+        create_home_nodes method of the nodes object.
 
         Connects the newly created home nodes to other nodes using the
-        connectHomeNodes method of the nodes object, based on directions
+        connect_home_nodes method of the nodes object, based on directions
         specified by homenodeconnectLeft and homenodeconnectRight.
 
         Parameters
@@ -79,11 +79,11 @@ class MazeBase(ABC):
         nodes : Node
             The nodes object to create the home nodes in.
         """
-        key = nodes.createHomeNodes(*self.homeoffset)
-        nodes.connectHomeNodes(key, self.homenodeconnectLeft, LEFT)
-        nodes.connectHomeNodes(key, self.homenodeconnectRight, RIGHT)
+        key = nodes.create_home_nodes(*self.homeoffset)
+        nodes.connect_home_nodes(key, self.homenodeconnectLeft, LEFT)
+        nodes.connect_home_nodes(key, self.homenodeconnectRight, RIGHT)
 
-    def addOffset(self, x: int, y: int) -> tuple:
+    def add_offset(self, x: int, y: int) -> tuple:
         """
         Returns a new tuple by adding x to the first element and y to the second
         element of the homeoffset tuple.
@@ -104,7 +104,7 @@ class MazeBase(ABC):
         """
         return x + self.homeoffset[0], y + self.homeoffset[1]
 
-    def denyGhostsAccess(self, ghosts: "Ghost", nodes: "Node") -> None:
+    def deny_ghosts_access(self, ghosts: "Ghost", nodes: "Node") -> None:
         """
         Adds denial rules to restrict ghost access in certain directions for
         nodes in the maze environment.
@@ -119,12 +119,12 @@ class MazeBase(ABC):
         nodes : Node
             The nodes object to deny access in.
         """
-        nodes.denyAccessList(*(self.addOffset(2, 3) + (LEFT, ghosts)))
-        nodes.denyAccessList(*(self.addOffset(2, 3) + (RIGHT, ghosts)))
+        nodes.deny_access_list(*(self.add_offset(2, 3) + (LEFT, ghosts)))
+        nodes.deny_access_list(*(self.add_offset(2, 3) + (RIGHT, ghosts)))
 
         for direction in list(self.ghostNodeDeny.keys()):
             for values in self.ghostNodeDeny[direction]:
-                nodes.denyAccessList(*(values + (direction, ghosts)))
+                nodes.deny_access_list(*(values + (direction, ghosts)))
 
 
 class Maze1(MazeBase):
@@ -164,8 +164,8 @@ class Maze1(MazeBase):
         self.fruitStart = (9, 20)
         self.ghostNodeDeny = {
             UP: ((12, 14), (15, 14), (12, 26), (15, 26)),
-            LEFT: (self.addOffset(2, 3),),
-            RIGHT: (self.addOffset(2, 3),),
+            LEFT: (self.add_offset(2, 3),),
+            RIGHT: (self.add_offset(2, 3),),
         }
 
 
@@ -206,8 +206,8 @@ class Maze2(MazeBase):
         self.fruitStart = (11, 20)
         self.ghostNodeDeny = {
             UP: ((9, 14), (18, 14), (11, 23), (16, 23)),
-            LEFT: (self.addOffset(2, 3),),
-            RIGHT: (self.addOffset(2, 3),),
+            LEFT: (self.add_offset(2, 3),),
+            RIGHT: (self.add_offset(2, 3),),
         }
 
 
@@ -225,7 +225,7 @@ class MazeData:
 
     Methods
     -------
-    loadMaze(level)
+    load_maze(level)
         Loads the maze for the given level.
     """
 
@@ -233,7 +233,7 @@ class MazeData:
         self.obj = None
         self.mazedict = {0: Maze1, 1: Maze2}
 
-    def loadMaze(self, level: int) -> None:
+    def load_maze(self, level: int) -> None:
         """
         Loads the maze for the given level and stores it in the obj attribute.
 
