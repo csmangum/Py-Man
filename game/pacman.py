@@ -52,7 +52,7 @@ class PacMan(Entity):
         Checks if the entity has collided with another entity
     """
 
-    def __init__(self, node: "Node") -> None:
+    def __init__(self, node: 'Node') -> None:
         Entity.__init__(self, node)
         self.name = PACMAN
         self.color = YELLOW

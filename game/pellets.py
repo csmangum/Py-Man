@@ -291,6 +291,17 @@ class PelletGroup:
         if len(self.pelletList) == 0:
             return True
         return False
+    
+    def check_empty(self, x, y) -> bool:
+        """
+        Checks if the pelletList is empty, i.e., all pellets have been eaten.
+        """
+        
+        for pellet in self.pelletList:
+            if pellet.position.x == x and pellet.position.y == y:
+                return False
+            
+        return True
 
     def render(self, screen: pygame.Surface) -> None:
         """

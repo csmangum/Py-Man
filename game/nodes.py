@@ -227,6 +227,9 @@ class NodeGroup(ABC):
     ) -> None:
         """
         Constructs nodes based on the maze data.
+        
+        
+
 
         Parameters
         ----------
