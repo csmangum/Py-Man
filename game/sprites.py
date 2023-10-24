@@ -143,9 +143,6 @@ class PacManSprites(Spritesheet):
         Defines animations for Pac-Man based on its direction (LEFT, RIGHT, UP,
         DOWN) and a DEATH animation. Each animation is associated with a
         sequence of sprite positions on the sprite sheet.
-
-        The Animator class (presumably defined elsewhere) seems to handle the
-        sequence and timing of the animation frames.
         """
         self.animations[LEFT] = Animator(((8, 0), (0, 0), (0, 2), (0, 0)))
         self.animations[RIGHT] = Animator(((10, 0), (2, 0), (2, 2), (2, 0)))
@@ -634,20 +631,15 @@ class MazeSprites(Spritesheet):
         """
         for row in list(range(self.data.shape[0])):
             for col in list(range(self.data.shape[1])):
-                print(f"row: {row}, col: {col}, data: {self.data[row][col]}")
                 if self.data[row][col].isdigit():
                     x = int(self.data[row][col]) + 12
-                    # print(f"row: {row}, col: {col}, x: {x}, y: {y}")
                     sprite = self.get_image(x, y)
-                    print(sprite)
                     rotval = int(self.rotdata[row][col])
                     sprite = self.rotate(sprite, rotval)
                     background.blit(sprite, (col * TILEWIDTH, row * TILEHEIGHT))
                 elif self.data[row][col] == "=":
                     sprite = self.get_image(10, 8)
                     background.blit(sprite, (col * TILEWIDTH, row * TILEHEIGHT))
-                    
-        print('********************************')
 
         return background
 
