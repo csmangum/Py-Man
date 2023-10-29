@@ -9,6 +9,7 @@ AI Methods:
 - Behavioral Trees
 - Utility Based
 - Tree Search
+- Neural Networks
 - and more
 
 Game assets are from [Pacmancode](https://pacmancode.com/)  
