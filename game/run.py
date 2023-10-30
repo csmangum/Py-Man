@@ -56,29 +56,29 @@ class GameController:
 
     Methods
     -------
-    setBackground()
+    set_background()
         Sets the background image
-    startGame()
+    start_game()
         Starts the game
     update()
         Updates the game state
-    checkEvents()
+    check_events()
         Checks for user input
-    checkPelletEvents()
+    check_pellet_events()
         Checks for pellet events
-    checkGhostEvents()
+    check_ghost_events()
         Checks for ghost events
-    checkFruitEvents()
+    check_fruit_events()
         Checks for fruit events
-    showEntities()
+    show_entities()
         Shows the entities
-    hideEntities()
+    hide_entities()
         Hides the entities
-    nextLevel()
+    next_level()
         Starts the next level
-    restartGame()
+    restart_game()
         Restarts the game
-    resetLevel()
+    reset_level()
         Resets the current level
     update_score()
         Updates the score
@@ -109,7 +109,7 @@ class GameController:
         self.fruitNode = None
         self.mazedata = MazeData()
 
-    def setBackground(self) -> None:
+    def set_background(self) -> None:
         """
         Sets up the game's background, including a normal background
         and a flashing one.
@@ -127,7 +127,7 @@ class GameController:
         self.flashBG = False
         self.background = self.background_norm
 
-    def startGame(self) -> None:
+    def start_game(self) -> None:
         """
         Loads the maze for the current level, sets up the maze sprites, nodes,
         Pacman, pellets, and ghosts. It also configures the starting positions
@@ -151,7 +151,7 @@ class GameController:
             "assets/" + self.mazedata.obj.name + ".txt",
             "assets/" + self.mazedata.obj.name + "_rotation.txt",
         )
-        self.setBackground()
+        self.set_background()
         self.nodes = NodeGroup("assets/" + self.mazedata.obj.name + ".txt")
         self.mazedata.obj.set_portal_pairs(self.nodes)
         self.mazedata.obj.connect_home_nodes(self.nodes)
@@ -210,9 +210,9 @@ class GameController:
             self.ghosts.update(self)
             if self.fruit is not None:
                 self.fruit.update(self)
-            self.checkPelletEvents()
-            self.checkGhostEvents()
-            self.checkFruitEvents()
+            self.check_pellet_events()
+            self.check_ghost_events()
+            self.check_fruit_events()
 
         # Play when pacman is alive and not paused
         if self.pacman.alive:
@@ -237,11 +237,11 @@ class GameController:
             afterPauseMethod()
 
         # Finish update and render
-        self.checkEvents()
+        self.check_events()
         if self.render_game:
             self.render()
 
-    def checkEvents(self) -> None:
+    def check_events(self) -> None:
         """
         Checks for user input events, like quitting the game or pausing.
 
@@ -254,15 +254,15 @@ class GameController:
             elif event.type == KEYDOWN:
                 if event.key == K_SPACE:
                     if self.pacman.alive:
-                        self.pause.set_pause(playerPaused=True)
+                        self.pause.set_pause(player_paused=True)
                         if not self.pause.paused:
                             self.textgroup.hide_text()
-                            self.showEntities()
+                            self.show_entities()
                         else:
                             self.textgroup.show_text(PAUSETXT)
-                            # self.hideEntities()
+                            # self.hide_entities()
 
-    def checkPelletEvents(self) -> None:
+    def check_pellet_events(self) -> None:
         """
         Checks if Pacman has eaten any pellets and handles the consequences.
 
@@ -272,7 +272,7 @@ class GameController:
         If Pacman eats all the pellets, the background flashes and the game is
             paused for 3 seconds before starting the next level.
         """
-        pellet = self.pacman.eat_pellets(self.pellets.pelletList)
+        pellet = self.pacman.eat_pellets(self.pellets.pellet_List)
         if pellet:
             self.pellets.numEaten += 1
             self.update_score(pellet.points)
@@ -280,15 +280,15 @@ class GameController:
                 self.ghosts.inky.startNode.allow_access(RIGHT, self.ghosts.inky)
             if self.pellets.numEaten == 70:
                 self.ghosts.clyde.startNode.allow_access(LEFT, self.ghosts.clyde)
-            self.pellets.pelletList.remove(pellet)
+            self.pellets.pellet_List.remove(pellet)
             if pellet.name == POWERPELLET:
                 self.ghosts.start_freight()
             if self.pellets.is_empty():
                 self.flashBG = True
-                self.hideEntities()
-                self.pause.set_pause(pauseTime=3, func=self.nextLevel)
+                self.hide_entities()
+                self.pause.set_pause(pause_time=3, func=self.next_level)
 
-    def checkGhostEvents(self) -> None:
+    def check_ghost_events(self) -> None:
         """
         Checks for collisions between Pacman and the ghosts and handles the outcomes.
 
@@ -313,7 +313,7 @@ class GameController:
                         time=1,
                     )
                     self.ghosts.update_points()
-                    self.pause.set_pause(pauseTime=1, func=self.showEntities)
+                    self.pause.set_pause(pause_time=1, func=self.show_entities)
                     ghost.start_spawn()
                     self.nodes.allow_home_access(ghost)
                 elif ghost.mode.current is not SPAWN:
@@ -324,11 +324,11 @@ class GameController:
                         self.ghosts.hide()
                         if self.lives <= 0:
                             self.textgroup.show_text(GAMEOVERTXT)
-                            self.pause.set_pause(pauseTime=3, func=self.restartGame)
+                            self.pause.set_pause(pause_time=3, func=self.restart_game)
                         else:
-                            self.pause.set_pause(pauseTime=3, func=self.resetLevel)
+                            self.pause.set_pause(pause_time=3, func=self.reset_level)
 
-    def checkFruitEvents(self) -> None:
+    def check_fruit_events(self) -> None:
         """
         Checks for events related to the fruit, like if Pacman has eaten it.
 
@@ -360,31 +360,31 @@ class GameController:
             elif self.fruit.destroy:
                 self.fruit = None
 
-    def showEntities(self) -> None:
+    def show_entities(self) -> None:
         """
         Shows the entities, like Pacman and the ghosts.
         """
         self.pacman.visible = True
         self.ghosts.show()
 
-    def hideEntities(self) -> None:
+    def hide_entities(self) -> None:
         """
         Hides the entities, like Pacman and the ghosts.
         """
         self.pacman.visible = False
         self.ghosts.hide()
 
-    def nextLevel(self) -> None:
+    def next_level(self) -> None:
         """
         Progresses the game to the next level.
         """
-        self.showEntities()
+        self.show_entities()
         self.level += 1
         self.pause.paused = True
-        self.startGame()
+        self.start_game()
         self.textgroup.update_level(self.level)
 
-    def restartGame(self) -> None:
+    def restart_game(self) -> None:
         """
         Restarts the game from the beginning.
         """
@@ -392,7 +392,7 @@ class GameController:
         self.level = 0
         self.pause.paused = True
         self.fruit = None
-        self.startGame()
+        self.start_game()
         self.score = 0
         self.textgroup.update_score(self.score)
         self.textgroup.update_level(self.level)
@@ -400,7 +400,7 @@ class GameController:
         self.lifesprites.reset_lives(self.lives)
         self.fruitCaptured = []
 
-    def resetLevel(self) -> None:
+    def reset_level(self) -> None:
         """
         Resets the current level.
         """
@@ -462,6 +462,6 @@ class GameController:
 
 if __name__ == "__main__":
     game = GameController()
-    game.startGame()
+    game.start_game()
     while True:
         game.update()

@@ -181,7 +181,7 @@ class PelletGroup:
 
     Attributes
     ----------
-    pelletList : list
+    pellet_List : list
         List of all pellets in the game
     powerpellets : list
         List of all power pellets in the game
@@ -193,37 +193,37 @@ class PelletGroup:
     update(dt)
         Updates all power pellets in the powerpellets list. This is mainly to
         handle the flashing effect of power pellets.
-    create_pellet_list(pelletfile)
+    create_pellet_list(pellet_file)
         Reads the pellet file and creates Pellet or PowerPellet objects based
         on the file's content.
-    read_pellet_file(textfile)
+    read_pellet_file(text_file)
         Reads the pellet layout from a file and returns it as a NumPy array.
     is_empty()
-        Checks if the pelletList is empty, i.e., all pellets have been eaten.
+        Checks if the pellet_List is empty, i.e., all pellets have been eaten.
     render(screen)
-        Renders all pellets in the pelletList on the provided screen (or surface).
+        Renders all pellets in the pellet_List on the provided screen (or surface).
     """
 
-    def __init__(self, pelletfile: str) -> None:
+    def __init__(self, pellet_file: str) -> None:
         """
-        Initializes the pelletList to store all pellets (both regular and
+        Initializes the pellet_List to store all pellets (both regular and
         power pellets).
 
         Initializes the powerpellets list to store only power pellets.
 
-        Calls the create_pellet_list method to populate the pelletList based on the
+        Calls the create_pellet_list method to populate the pellet_List based on the
         provided pellet file.
 
         Initializes a counter (numEaten) to track the number of pellets eaten.
 
         Parameters
         ----------
-        pelletfile : str
+        pellet_file : str
             Path to the pellet file
         """
-        self.pelletList = []
+        self.pellet_List = []
         self.powerpellets = []
-        self.create_pellet_list(pelletfile)
+        self.create_pellet_list(pellet_file)
         self.numEaten = 0
 
     def update(self, dt: float) -> None:
@@ -240,7 +240,7 @@ class PelletGroup:
         for powerpellet in self.powerpellets:
             powerpellet.update(dt)
 
-    def create_pellet_list(self, pelletfile: str) -> None:
+    def create_pellet_list(self, pellet_file: str) -> None:
         """
         Reads the pellet file and creates Pellet or PowerPellet objects based
         on the file's content.
@@ -250,26 +250,26 @@ class PelletGroup:
 
         Parameters
         ----------
-        pelletfile : str
+        pellet_file : str
             Path to the pellet file
         """
-        data = self.read_pellet_file(pelletfile)
+        data = self.read_pellet_file(pellet_file)
         for row in range(data.shape[0]):
             for col in range(data.shape[1]):
                 if data[row][col] in [".", "+"]:
-                    self.pelletList.append(Pellet(row, col))
+                    self.pellet_List.append(Pellet(row, col))
                 elif data[row][col] in ["P", "p"]:
                     pp = PowerPellet(row, col)
-                    self.pelletList.append(pp)
+                    self.pellet_List.append(pp)
                     self.powerpellets.append(pp)
 
-    def read_pellet_file(self, textfile: str) -> np.ndarray:
+    def read_pellet_file(self, text_file: str) -> np.ndarray:
         """
         Reads the pellet layout from a file and returns it as a NumPy array.
 
         Parameters
         ----------
-        textfile : str
+        text_file : str
             Path to the pellet file
 
         Returns
@@ -277,40 +277,40 @@ class PelletGroup:
         np.ndarray
             Pellet layout as a NumPy array
         """
-        return np.loadtxt(textfile, dtype="<U1")
+        return np.loadtxt(text_file, dtype="<U1")
 
     def is_empty(self) -> bool:
         """
-        Checks if the pelletList is empty, i.e., all pellets have been eaten.
+        Checks if the pellet_List is empty, i.e., all pellets have been eaten.
 
         Returns
         -------
         bool
-            Whether the pelletList is empty or not
+            Whether the pellet_List is empty or not
         """
-        if len(self.pelletList) == 0:
+        if len(self.pellet_List) == 0:
             return True
         return False
-    
+
     def check_empty(self, x, y) -> bool:
         """
-        Checks if the pelletList is empty, i.e., all pellets have been eaten.
+        Checks if the pellet_List is empty, i.e., all pellets have been eaten.
         """
-        
-        for pellet in self.pelletList:
+
+        for pellet in self.pellet_List:
             if pellet.position.x == x and pellet.position.y == y:
                 return False
-            
+
         return True
 
     def render(self, screen: pygame.Surface) -> None:
         """
-        Renders all pellets in the pelletList on the provided screen (or surface).
+        Renders all pellets in the pellet_List on the provided screen (or surface).
 
         Parameters
         ----------
         screen : pygame.Surface
             Screen or surface on which the pellets are drawn
         """
-        for pellet in self.pelletList:
+        for pellet in self.pellet_List:
             pellet.render(screen)

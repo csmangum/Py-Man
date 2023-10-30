@@ -141,7 +141,7 @@ class NodeGroup(ABC):
 
     Methods
     -------
-    read_maze_file(textfile)
+    read_maze_file(text_file)
         Reads the maze layout from a file and returns it as a NumPy array
     create_node_table(data, xoffset, yoffset)
         Constructs nodes based on the maze data
@@ -159,7 +159,7 @@ class NodeGroup(ABC):
         Constructs nodes for the "home" area (where ghosts start)
     connect_home_nodes(homekey, otherkey, direction)
         Connects the home nodes to the main maze
-    get_node_from_pixels(xpixel, ypixel)
+    get_node_from_pixels(x_pixel, y_pixel)
         Retrieve a node based on pixel coordinates
     get_node_from_tiles(col, row)
         Retrieves a node based on tile (row, col) coordinates
@@ -206,13 +206,13 @@ class NodeGroup(ABC):
         self.connect_vertically(data)
         self.homekey = None
 
-    def read_maze_file(self, textfile: str) -> np.ndarray:
+    def read_maze_file(self, text_file: str) -> np.ndarray:
         """
         Reads the maze layout from a file and returns it as a NumPy array.
 
         Parameters
         ----------
-        textfile : str
+        text_file : str
             The name of the maze file
 
         Returns
@@ -220,7 +220,7 @@ class NodeGroup(ABC):
         np.ndarray
             A NumPy array containing the maze layout
         """
-        return np.loadtxt(textfile, dtype="<U1")
+        return np.loadtxt(text_file, dtype="<U1")
 
     def create_node_table(
         self, data: np.ndarray, xoffset: int = 0, yoffset: int = 0
@@ -396,15 +396,15 @@ class NodeGroup(ABC):
         self.nodesLUT[homekey].neighbors[direction] = self.nodesLUT[key]
         self.nodesLUT[key].neighbors[direction * -1] = self.nodesLUT[homekey]
 
-    def get_node_from_pixels(self, xpixel: int, ypixel: int) -> Node:
+    def get_node_from_pixels(self, x_pixel: int, y_pixel: int) -> Node:
         """
         Retrieve a node based on pixel coordinates
 
         Parameters
         ----------
-        xpixel : int
+        x_pixel : int
             The x coordinate of the pixel
-        ypixel : int
+        y_pixel : int
             The y coordinate of the pixel
 
         Returns
@@ -412,8 +412,8 @@ class NodeGroup(ABC):
         Node
             The node at the given pixel coordinates
         """
-        if (xpixel, ypixel) in self.nodesLUT.keys():
-            return self.nodesLUT[(xpixel, ypixel)]
+        if (x_pixel, y_pixel) in self.nodesLUT.keys():
+            return self.nodesLUT[(x_pixel, y_pixel)]
         return None
 
     def get_node_from_tiles(self, col: int, row: int) -> Node:

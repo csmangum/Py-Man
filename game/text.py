@@ -38,12 +38,12 @@ class Text(ABC):
 
     Methods
     -------
-    setup_font(fontpath: str) -> None
+    setup_font(font_path: str) -> None
         Initializes the font for rendering the text using a specified font
         path and size.
     create_label() -> None
         Renders the text content into a label using the specified font and color.
-    set_text(newtext: str) -> None
+    set_text(new_text: str) -> None
         Updates the text content and recreates the label.
     update(dt: float) -> None
         If the text object has a lifespan, this method updates a timer based on
@@ -112,17 +112,17 @@ class Text(ABC):
         self.setup_font("assets/PressStart2P-Regular.ttf")
         self.create_label()
 
-    def setup_font(self, fontpath: str) -> None:
+    def setup_font(self, font_path: str) -> None:
         """
         Initializes the font for rendering the text using a specified font
         path and size.
 
         Parameters
         ----------
-        fontpath : str
+        font_path : str
             The path to the font file.
         """
-        self.font = pygame.font.Font(fontpath, self.size)
+        self.font = pygame.font.Font(font_path, self.size)
 
     def create_label(self) -> None:
         """
@@ -130,16 +130,16 @@ class Text(ABC):
         """
         self.label = self.font.render(self.text, 1, self.color)
 
-    def set_text(self, newtext: str) -> None:
+    def set_text(self, new_text: str) -> None:
         """
         Updates the text content and recreates the label.
 
         Parameters
         ----------
-        newtext : str
+        new_text : str
             The new text content.
         """
-        self.text = str(newtext)
+        self.text = str(new_text)
         self.create_label()
 
     def update(self, dt: float) -> None:

@@ -329,7 +329,7 @@ class GhostGroup:
     update_points()
         Updates the points attribute for all ghost entities by doubling
         their current points.
-    resetPoints()
+    reset_points()
         Resets the points attribute for all ghost entities to 200.
     hide()
         Sets the visible attribute to False for all ghost entities,
@@ -389,7 +389,7 @@ class GhostGroup:
         """
         for ghost in self:
             ghost.start_freight()
-        self.resetPoints()
+        self.reset_points()
 
     def set_spawn_node(self, node: "Node") -> None:
         """
@@ -412,7 +412,7 @@ class GhostGroup:
         for ghost in self:
             ghost.points *= 2
 
-    def resetPoints(self) -> None:
+    def reset_points(self) -> None:
         """
         Resets the points attribute for all ghost entities to 200.
         """

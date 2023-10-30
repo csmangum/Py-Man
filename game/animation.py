@@ -32,14 +32,14 @@ class Animator:
         and marking it as not finished.
     update(dt)
         Takes a time increment (dt) as a parameter and updates the animation.
-        If the animation is not marked as finished, it calls the nextFrame
+        If the animation is not marked as finished, it calls the next_frame
         method to determine the next frame to display.
         Checks if the current_frame has reached the end of the animation sequence.
         If loop is True, it resets the animation to the beginning
             (current_frame = 0) when it reaches the end.
         If loop is False, it marks the animation as finished
             (finished = True) and keeps current_frame at its last value.
-    nextFrame(dt)
+    next_frame(dt)
         Increments dt with the provided dt value.
         If dt exceeds the time required to advance to the next frame (based on
         the speed attribute), it increments current_frame by 1 and resets dt to 0.
@@ -78,7 +78,7 @@ class Animator:
         """
         Takes a time increment (dt) as a parameter and updates the animation.
 
-        If the animation is not marked as finished, it calls the nextFrame
+        If the animation is not marked as finished, it calls the next_frame
         method to determine the next frame to display.
 
         Checks if the current_frame has reached the end of the animation sequence.
@@ -94,7 +94,7 @@ class Animator:
             The time increment.
         """
         if not self.finished:
-            self.nextFrame(dt)
+            self.next_frame(dt)
         if self.current_frame == len(self.frames):
             if self.loop:
                 self.current_frame = 0
@@ -104,7 +104,7 @@ class Animator:
 
         return self.frames[self.current_frame]
 
-    def nextFrame(self, dt: int) -> None:
+    def next_frame(self, dt: int) -> None:
         """
         Increments dt with the provided dt value.
 

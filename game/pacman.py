@@ -2,7 +2,6 @@ from random import random
 from typing import Union
 import pygame
 from pygame.locals import *
-from vector import Vector2  #! Why is this not used?
 from constants import *
 from entity import Entity
 from sprites import PacManSprites
@@ -44,7 +43,7 @@ class PacMan(Entity):
         Updates the entity
     get_valid_key()
         Gets the key pressed by the player
-    eat_pellets(pelletList)
+    eat_pellets(pellet_List)
         Checks if the entity has eaten a pellet
     collide_ghost(ghost)
         Checks if the entity has collided with a ghost
@@ -141,7 +140,7 @@ class PacMan(Entity):
             return RIGHT
         return STOP
 
-    def eat_pellets(self, pelletList: list) -> Union[None, object]:
+    def eat_pellets(self, pellet_List: list) -> Union[None, object]:
         """
         Checks for collisions between Pac-Man and any pellet in the provided list.
 
@@ -149,7 +148,7 @@ class PacMan(Entity):
 
         Parameters
         ----------
-        pelletList : list
+        pellet_List : list
             A list of pellets to check for collisions with
 
         Returns
@@ -157,7 +156,7 @@ class PacMan(Entity):
         object
             The pellet that was "eaten" if a collision is detected, None otherwise
         """
-        for pellet in pelletList:
+        for pellet in pellet_List:
             if self.collide_check(pellet):
                 return pellet
         return None

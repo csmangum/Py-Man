@@ -11,7 +11,7 @@ class Pause:
         Whether the game is paused or not
     timer : float
         Elapsed time since the game was paused
-    pauseTime : float
+    pause_time : float
         Duration for which the game should be paused
     func : function
         Callback function to be executed after the pause duration is over
@@ -24,7 +24,7 @@ class Pause:
         returns the callback function (func). This allows the game to execute a
         specific action after the pause duration is over. If the pause duration
         is not reached or not set, it returns None.
-    set_pause(playerPaused, pauseTime, func)
+    set_pause(player_paused, pause_time, func)
         Sets the pause state with the provided arguments.
     flip()
         Toggles the pause state (paused attribute).
@@ -38,7 +38,7 @@ class Pause:
         Initializes a timer (timer attribute) to track the elapsed time since
         the game was paused.
 
-        Initializes pauseTime to store the duration for which the game should
+        Initializes pause_time to store the duration for which the game should
         be paused.
 
         Initializes func to store a callback function that can be executed after
@@ -51,12 +51,12 @@ class Pause:
         """
         self.paused = paused
         self.timer = 0
-        self.pauseTime = None
+        self.pause_time = None
         self.func = None
 
     def update(self, dt: float) -> None:
         """
-        If a pause duration (pauseTime) is set, this method increments the timer
+        If a pause duration (pause_time) is set, this method increments the timer
         by the time delta (dt).
 
         If the timer exceeds or equals the pause duration, it resets the timer,
@@ -70,24 +70,24 @@ class Pause:
         dt : float
             Time delta
         """
-        if self.pauseTime is not None:
+        if self.pause_time is not None:
             self.timer += dt
-            if self.timer >= self.pauseTime:
+            if self.timer >= self.pause_time:
                 self.timer = 0
                 self.paused = False
-                self.pauseTime = None
+                self.pause_time = None
                 return self.func
         return None
 
-    def set_pause(self, playerPaused: bool = False, pauseTime=None, func=None) -> None:
+    def set_pause(self, player_paused: bool = False, pause_time=None, func=None) -> None:
         """
         Sets the pause state with the provided arguments.
 
         Parameters
         ----------
-        playerPaused : bool, optional
+        player_paused : bool, optional
             Whether the game was paused by the player, by default False
-        pauseTime : float, optional
+        pause_time : float, optional
             Duration for which the game should be paused, by default None
         func : function, optional
             Callback function to be executed after the pause duration is over,
@@ -95,7 +95,7 @@ class Pause:
         """
         self.timer = 0
         self.func = func
-        self.pauseTime = pauseTime
+        self.pause_time = pause_time
         self.flip()
 
     def flip(self) -> None:

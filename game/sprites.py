@@ -464,13 +464,13 @@ class LifeSprites(Spritesheet):
     -------
     remove_image()
         Removes one life image from the beginning of the self.images list.
-    reset_lives(numlives)
+    reset_lives(num_lives)
         Resets the self.images list based on the number of lives provided.
     get_image(x, y)
         Gets the image at the specified x and y coordinates.
     """
 
-    def __init__(self, numlives: int) -> None:
+    def __init__(self, num_lives: int) -> None:
         """
         Calls the initialization method of the parent Spritesheet class.
 
@@ -479,11 +479,11 @@ class LifeSprites(Spritesheet):
 
         Parameters
         ----------
-        numlives : int
+        num_lives : int
             The number of lives to represent.
         """
         Spritesheet.__init__(self)
-        self.reset_lives(numlives)
+        self.reset_lives(num_lives)
 
     def remove_image(self) -> None:
         """
@@ -492,7 +492,7 @@ class LifeSprites(Spritesheet):
         if len(self.images) > 0:
             self.images.pop(0)
 
-    def reset_lives(self, numlives: int) -> None:
+    def reset_lives(self, num_lives: int) -> None:
         """
         Resets the self.images list based on the number of lives provided.
         Each life is represented by an image, and the method populates the list
@@ -500,11 +500,11 @@ class LifeSprites(Spritesheet):
 
         Parameters
         ----------
-        numlives : int
+        num_lives : int
             The number of lives to represent.
         """
         self.images = []
-        for i in range(numlives):
+        for i in range(num_lives):
             self.images.append(self.get_image(0, 0))
 
     def get_image(self, x: int, y: int) -> pygame.Surface:
@@ -535,12 +535,12 @@ class MazeSprites(Spritesheet):
     ----------
     data : np.ndarray
         A NumPy array of strings representing the maze layout.
-    rotdata : np.ndarray
+    rot_data : np.ndarray
         A NumPy array of strings representing the rotation data for the maze layout.
 
     Methods
     -------
-    read_maze_file(mazefile)
+    read_maze_file(maze_file)
         Reads the maze layout from a file and returns it as a NumPy array of strings.
     construct_background(background, y)
         Constructs the maze background by iterating over the maze data (self.data).
@@ -548,25 +548,25 @@ class MazeSprites(Spritesheet):
         Rotates the provided sprite by a specified angle.
     """
 
-    def __init__(self, mazefile: str, rotfile: str) -> None:
+    def __init__(self, maze_file: str, rot_file: str) -> None:
         """
         Calls the initialization method of the parent Spritesheet class.
 
-        Reads the maze layout from a file (mazefile) and stores it in self.data.
+        Reads the maze layout from a file (maze_file) and stores it in self.data.
 
-        Reads the rotation data for the maze layout from another file (rotfile)
-        and stores it in self.rotdata.
+        Reads the rotation data for the maze layout from another file (rot_file)
+        and stores it in self.rot_data.
 
         Parameters
         ----------
-        mazefile : str
+        maze_file : str
             The name of the file to read the maze layout from.
-        rotfile : str
+        rot_file : str
             The name of the file to read the rotation data from.
         """
         Spritesheet.__init__(self)
-        self.data = self.read_maze_file(mazefile)
-        self.rotdata = self.read_maze_file(rotfile)
+        self.data = self.read_maze_file(maze_file)
+        self.rot_data = self.read_maze_file(rot_file)
 
     def get_image(self, x: int, y: int) -> pygame.Surface:
         """
@@ -587,13 +587,13 @@ class MazeSprites(Spritesheet):
         """
         return Spritesheet.get_image(self, x, y, TILEWIDTH, TILEHEIGHT)
 
-    def read_maze_file(self, mazefile: str) -> np.ndarray:
+    def read_maze_file(self, maze_file: str) -> np.ndarray:
         """
         Reads the maze layout from a file and returns it as a NumPy array of strings.
 
         Parameters
         ----------
-        mazefile : str
+        maze_file : str
             The name of the file to read the maze layout from.
 
         Returns
@@ -601,8 +601,8 @@ class MazeSprites(Spritesheet):
         np.ndarray
             A NumPy array of strings representing the maze layout.
         """
-        print(f'Loading maze file "{mazefile}"')
-        return np.loadtxt(mazefile, dtype="<U1")
+        print(f'Loading maze file "{maze_file}"')
+        return np.loadtxt(maze_file, dtype="<U1")
 
     def construct_background(
         self, background: pygame.Surface, y: int
@@ -614,7 +614,7 @@ class MazeSprites(Spritesheet):
         (indicating a specific sprite) or an "=" (indicating a specific sprite).
 
         It then retrieves the appropriate sprite, rotates it based on the
-        rotation data (self.rotdata), and blits (draws) it onto the provided
+        rotation data (self.rot_data), and blits (draws) it onto the provided
         background surface.
 
         Parameters
@@ -634,7 +634,7 @@ class MazeSprites(Spritesheet):
                 if self.data[row][col].isdigit():
                     x = int(self.data[row][col]) + 12
                     sprite = self.get_image(x, y)
-                    rotval = int(self.rotdata[row][col])
+                    rotval = int(self.rot_data[row][col])
                     sprite = self.rotate(sprite, rotval)
                     background.blit(sprite, (col * TILEWIDTH, row * TILEHEIGHT))
                 elif self.data[row][col] == "=":
