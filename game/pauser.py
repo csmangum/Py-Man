@@ -79,7 +79,9 @@ class Pause:
                 return self.func
         return None
 
-    def set_pause(self, player_paused: bool = False, pause_time=None, func=None) -> None:
+    def set_pause(
+        self, player_paused: bool = False, pause_time=None, func=None
+    ) -> None:
         """
         Sets the pause state with the provided arguments.
 

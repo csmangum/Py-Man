@@ -63,7 +63,7 @@ class Node(ABC):
             RIGHT: [PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
         }
 
-    def deny_access(self, direction: int, entity: 'Entity') -> None:
+    def deny_access(self, direction: int, entity: "Entity") -> None:
         """
         Denies access for a specific entity in a given direction.
 
@@ -80,7 +80,7 @@ class Node(ABC):
         if entity.name in self.access[direction]:
             self.access[direction].remove(entity.name)
 
-    def allow_access(self, direction: int, entity: 'Entity') -> None:
+    def allow_access(self, direction: int, entity: "Entity") -> None:
         """
         Allows access for a specific entity in a given direction,
         enabling the entity to move in that direction from this node.
@@ -227,8 +227,8 @@ class NodeGroup(ABC):
     ) -> None:
         """
         Constructs nodes based on the maze data.
-        
-        
+
+
 
 
         Parameters
@@ -379,7 +379,9 @@ class NodeGroup(ABC):
         self.homekey = self.construct_key(xoffset + 2, yoffset)
         return self.homekey
 
-    def connect_home_nodes(self, homekey: tuple, otherkey: tuple, direction: int) -> None:
+    def connect_home_nodes(
+        self, homekey: tuple, otherkey: tuple, direction: int
+    ) -> None:
         """
         Connects the home nodes to the main maze.
 
@@ -437,7 +439,7 @@ class NodeGroup(ABC):
             return self.nodesLUT[(x, y)]
         return None
 
-    def deny_access(self, col: int, row: int, direction: int, entity: 'Entity') -> None:
+    def deny_access(self, col: int, row: int, direction: int, entity: "Entity") -> None:
         """
         Denies access for a specific entity in a given direction from a given tile.
 
@@ -456,7 +458,9 @@ class NodeGroup(ABC):
         if node is not None:
             node.deny_access(direction, entity)
 
-    def allow_access(self, col: int, row: int, direction: int, entity: 'Entity') -> None:
+    def allow_access(
+        self, col: int, row: int, direction: int, entity: "Entity"
+    ) -> None:
         """
         Allows access for a specific entity in a given direction from a given tile.
 
@@ -478,7 +482,7 @@ class NodeGroup(ABC):
             node.allow_access(direction, entity)
 
     def deny_access_list(
-        self, col: int, row: int, direction: int, entities: List['Entity']
+        self, col: int, row: int, direction: int, entities: List["Entity"]
     ) -> None:
         """
         Denies access for a list of entities in a given direction from a given tile.
@@ -498,7 +502,7 @@ class NodeGroup(ABC):
             self.deny_access(col, row, direction, entity)
 
     def allow_access_list(
-        self, col: int, row: int, direction: int, entities: List['Entity']
+        self, col: int, row: int, direction: int, entities: List["Entity"]
     ) -> None:
         """
         Allows access for a list of entities in a given direction from a given tile.
@@ -517,7 +521,7 @@ class NodeGroup(ABC):
         for entity in entities:
             self.allow_access(col, row, direction, entity)
 
-    def deny_home_access(self, entity: 'Entity') -> None:
+    def deny_home_access(self, entity: "Entity") -> None:
         """
         Denies access for a specific entity to the home node.
 
@@ -528,7 +532,7 @@ class NodeGroup(ABC):
         """
         self.nodesLUT[self.homekey].deny_access(DOWN, entity)
 
-    def allow_home_access(self, entity: 'Entity') -> None:
+    def allow_home_access(self, entity: "Entity") -> None:
         """
         Allows access for a specific entity to the home node.
 
@@ -539,7 +543,7 @@ class NodeGroup(ABC):
         """
         self.nodesLUT[self.homekey].allow_access(DOWN, entity)
 
-    def deny_home_access_list(self, entities: List['Entity']) -> None:
+    def deny_home_access_list(self, entities: List["Entity"]) -> None:
         """
         Denies access for a list of entities to the home node.
 
@@ -551,7 +555,7 @@ class NodeGroup(ABC):
         for entity in entities:
             self.deny_home_access(entity)
 
-    def allow_home_access_list(self, entities: List['Entity']) -> None:
+    def allow_home_access_list(self, entities: List["Entity"]) -> None:
         """
         Allows access for a list of entities to the home node.
 
