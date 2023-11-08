@@ -14,6 +14,9 @@ border_styles = {
     '+': 'corner_pellet',
     '.': 'normal_pellet',
     'p': 'power_pellet',
-    '-': 'empty_game_space'
+    '-': 'empty_game_space',
+    'n': '?',
+    '=': 'door',
+    '|': '?'
 }
 ```
