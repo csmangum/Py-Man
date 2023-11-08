@@ -1,15 +1,19 @@
-'0' : Double line border corner  
-'1' : Double line border  
-'2' : Single line border corner  
-'3' : Single line border  
-'4' : Bold line border corner  
-'5' : Bold line border  
-'6' : Tight line border  
-'7' : Left corder  
-'8' : Right corner  
-'9' : Single line inside corner  
-'X' : Empty border space  
-'+' : Corner pellet  
-'.' : Normal pellet  
-'p' : Power pellet  
-'-' : Empty game space  
+```python
+border_styles = {
+    '0': 'double_line_border_corner',
+    '1': 'double_line_border',
+    '2': 'single_line_border_corner',
+    '3': 'single_line_border',
+    '4': 'bold_line_border_corner',
+    '5': 'bold_line_border',
+    '6': 'tight_line_border',
+    '7': 'left_corner',
+    '8': 'right_corner',
+    '9': 'single_line_inside_corner',
+    'X': 'empty_border_space',
+    '+': 'corner_pellet',
+    '.': 'normal_pellet',
+    'p': 'power_pellet',
+    '-': 'empty_game_space'
+}
+```
