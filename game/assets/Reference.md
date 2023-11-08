@@ -20,3 +20,7 @@ border_styles = {
     '|': '?'
 }
 ```
+
+```python
+playable_area = ['corner_pellet', 'normal_pellet', 'power_pellet', 'empty_game_space', '?', '?']
+```
