@@ -1,5 +1,5 @@
 ```python
-border_styles = {
+maze_map = {
     '0': 'double_line_border_corner',
     '1': 'double_line_border',
     '2': 'single_line_border_corner',
