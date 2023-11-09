@@ -22,5 +22,14 @@ maze_map = {
 ```
 
 ```python
+rotation_map = {
+    '0': 0,
+    '1': 90,
+    '2': 180,
+    '3': 270
+}
+```
+
+```python
 playable_area = ['corner_pellet', 'normal_pellet', 'power_pellet', 'empty_game_space', '?', '?']
 ```
