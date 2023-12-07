@@ -46,7 +46,7 @@ class Spritesheet(ABC):
 
         Rescales the sprite sheet to match the game's tile width and height.
         """
-        self.sheet = pygame.image.load("assets/spritesheet_mspacman.png").convert()
+        self.sheet = pygame.image.load("game/assets/spritesheet_mspacman.png").convert()
         transcolor = self.sheet.get_at((0, 0))
         self.sheet.set_colorkey(transcolor)
         width = int(self.sheet.get_width() / BASETILEWIDTH * TILEWIDTH)
