@@ -142,6 +142,10 @@ class Ghost(Entity):
         dt : int
             The time increment.
         """
+        if self.name == BLINKY:
+            print(
+                f"""mode: {self.mode.current},goal: {self.goal},home: {self.homeNode.position},position: {self.position},direction: {self.direction},pacman: {self.pacman.position},direction_method: {self.directionMethod(self.directions)}"""
+            )
         dt = game.dt
         self.sprites.update(dt)
         self.mode.update(dt)

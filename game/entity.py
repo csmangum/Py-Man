@@ -322,6 +322,7 @@ class Entity(ABC):
             )
             distances.append(vec.magnitude_squared())
         index = distances.index(min(distances))
+
         return directions[index]
 
     def set_start_node(self, node: "Node") -> None:
